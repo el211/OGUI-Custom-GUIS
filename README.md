@@ -1,4 +1,4 @@
-# OGUI Enhanced - Complete Wiki Documentation
+# OGUI  - Complete  Documentation
 
 Welcome to the OGUI Enhanced Wiki! This folder contains comprehensive documentation for the OGUI Enhanced Minecraft plugin.
 
