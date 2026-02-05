@@ -1,0 +1,29 @@
+name: OGUI
+version: 1.0.0
+main: com.ogui.OGUIPlugin
+api-version: 1.13
+softdepend: [Vault]
+commands:
+  ogui:
+    description: Open or reload OGUI menus.
+    usage: /ogui <open|reload> [id] [player]
+    permission: ogui.command
+    aliases: [gui, omenu]
+permissions:
+  ogui.command:
+    default: true
+  ogui.open:
+    default: true
+  ogui.reload:
+    default: op
+  ogui.command.*:
+    description: Allows using all GUI commands
+    default: true
+  ogui.*:
+    description: Grants all OGUI permissions
+    default: op
+    children:
+      ogui.command: true
+      ogui.open: true
+      ogui.reload: true
+      ogui.command.*: true
