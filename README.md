@@ -55,34 +55,6 @@ This wiki contains **25+ documentation pages** covering every aspect of OGUI Enh
 
 ## 🚀 Quick Start
 
-### For New Users
-
-**Read in this order:**
-
-1. **[Home.md](Home.md)** - Overview (5 minutes)
-2. **[Installation-Guide.md](Installation-Guide.md)** - Setup (15 minutes)
-3. **[Quick-Start-Tutorial.md](Quick-Start-Tutorial.md)** - First shop (10 minutes)
-
-**Total time to working shop:** ~30 minutes
-
-### For Existing Users
-
-**Jump to what you need:**
-
-- **Using OreoEssentials?** → [Economy-Conditions.md](Economy-Conditions.md)
-- **Want examples?** → [Shop-Examples.md](Shop-Examples.md)
-- **Having issues?** → [Troubleshooting.md](Troubleshooting.md)
-- **Complex requirements?** → [Multiple-Conditions.md](Multiple-Conditions.md)
-- **Custom items?** → [Custom-Items.md](Custom-Items.md)
-
-### For Developers
-
-**Developer resources:**
-
-1. **[API-Documentation.md](API-Documentation.md)** - API reference
-2. **[Condition-System.md](Condition-System.md)** - How conditions work
-3. **Plugin-Hooks.md** - Integration points
-
 ---
 
 ## 📖 Documentation Features
@@ -119,38 +91,6 @@ This wiki contains **25+ documentation pages** covering every aspect of OGUI Enh
 
 ## 🎯 Find What You Need
 
-### By Topic
-
-**Economy & Currency**
-- [Economy-Conditions.md](Economy-Conditions.md)
-- Vault integration
-- OreoEssentials currencies
-- Multi-currency shops
-
-**Custom Items**
-- [Custom-Items.md](Custom-Items.md)
-- [Item-Conditions.md](Item-Conditions.md)
-- ItemsAdder integration
-- Nexo integration
-- Custom model data
-
-**Requirements & Conditions**
-- [Condition-System.md](Condition-System.md)
-- [Multiple-Conditions.md](Multiple-Conditions.md)
-- All 11 condition types
-- Complex requirements
-
-**Configuration**
-- [Configuration-Basics.md](Configuration-Basics.md)
-- [Configuration-Reference.md](Configuration-Reference.md)
-- YAML syntax
-- Best practices
-
-**Troubleshooting**
-- [Troubleshooting.md](Troubleshooting.md)
-- [FAQ.md](FAQ.md)
-- Common issues
-- Solutions
 
 ### By Experience Level
 
