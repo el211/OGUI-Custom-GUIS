@@ -75,14 +75,6 @@ This wiki contains **25+ documentation pages** covering every aspect of OGUI Enh
 - **Complex requirements?** → [Multiple-Conditions.md](Multiple-Conditions.md)
 - **Custom items?** → [Custom-Items.md](Custom-Items.md)
 
-### For Developers
-
-**Developer resources:**
-
-1. **[API-Documentation.md](API-Documentation.md)** - API reference
-2. **[Condition-System.md](Condition-System.md)** - How conditions work
-3. **Plugin-Hooks.md** - Integration points
-
 ---
 
 ## 📖 Documentation Features
@@ -418,7 +410,7 @@ We created this comprehensive wiki because:
 ✅ **Troubleshooting should be easy**
 ✅ **Learning should be accessible**
 
-**Our goal:** Make OGUI Enhanced the most well-documented Minecraft plugin.
+**Our goal:** Make OGUI the most well-documented Minecraft plugin.
 
 ---
 
@@ -436,7 +428,6 @@ Need help? See [Troubleshooting.md](Troubleshooting.md)
 
 <div align="center">
 
-**Made with ❤️ for the Minecraft community**
 
 [Home](Home.md) • [Installation](Installation-Guide.md) • [Tutorial](Quick-Start-Tutorial.md) • [Examples](Shop-Examples.md) • [Support](FAQ.md)
 
