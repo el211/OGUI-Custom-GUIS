@@ -1,115 +1,6 @@
 # OGUI  - Complete  Documentation
 
-Welcome to the OGUI Enhanced Wiki! This folder contains comprehensive documentation for the OGUI Enhanced Minecraft plugin.
 
----
-
-## 📚 What's Inside
-
-This wiki contains **25+ documentation pages** covering every aspect of OGUI Enhanced:
-
-### Core Documentation (7 pages)
-- **Home.md** - Main entry point, overview, and quick links
-- **Installation-Guide.md** - Complete installation instructions
-- **Quick-Start-Tutorial.md** - Create your first shop in 5 minutes
-- **Condition-System.md** - Comprehensive guide to all 11 condition types
-- **Configuration-Basics.md** - Understanding the configuration structure
-- **GUI-System.md** - How GUIs work in OGUI
-- **Item-Providers.md** - Vanilla, ItemsAdder, and Nexo items
-
-### Condition Guides (6 pages)
-- **Economy-Conditions.md** - Vault and OreoEssentials currency
-- **Experience-Conditions.md** - XP levels and points
-- **Item-Conditions.md** - Vanilla and custom item requirements
-- **Permission-Conditions.md** - Rank-based access
-- **Region-Conditions.md** - WorldGuard integration
-- **PlaceholderAPI-Conditions.md** - Dynamic conditions
-
-### Examples & Tutorials (4 pages)
-- **Shop-Examples.md** - 20+ ready-to-use configurations
-- **Common-Patterns.md** - Frequently used setups
-- **Advanced-Setups.md** - Complex configurations
-- **Use-Cases.md** - Real-world implementations
-
-### Reference (4 pages)
-- **Commands-Reference.md** - All commands
-- **Permissions-Reference.md** - All permissions
-- **Configuration-Reference.md** - Complete config options
-- **API-Documentation.md** - Developer reference
-
-### Support (3 pages)
-- **FAQ.md** - 50+ frequently asked questions
-- **Troubleshooting.md** - Problem solving guide
-- **Migration-Guide.md** - Upgrading versions
-
-### Additional Guides (4 pages)
-- **Multiple-Conditions.md** - Combining requirements
-- **Custom-Items.md** - ItemsAdder and Nexo
-- **Legacy-Compatibility.md** - Backwards compatibility
-- **Performance-Optimization.md** - Scaling and optimization
-
-### Navigation
-- **Wiki-Index.md** - Complete documentation index with descriptions
-
----
-
-## 🚀 Quick Start
-
-### For New Users
-
-**Read in this order:**
-
-1. **[Home.md](Home.md)** - Overview (5 minutes)
-2. **[Installation-Guide.md](Installation-Guide.md)** - Setup (15 minutes)
-3. **[Quick-Start-Tutorial.md](Quick-Start-Tutorial.md)** - First shop (10 minutes)
-
-**Total time to working shop:** ~30 minutes
-
-### For Existing Users
-
-**Jump to what you need:**
-
-- **Using OreoEssentials?** → [Economy-Conditions.md](Economy-Conditions.md)
-- **Want examples?** → [Shop-Examples.md](Shop-Examples.md)
-- **Having issues?** → [Troubleshooting.md](Troubleshooting.md)
-- **Complex requirements?** → [Multiple-Conditions.md](Multiple-Conditions.md)
-- **Custom items?** → [Custom-Items.md](Custom-Items.md)
-
----
-
-## 📖 Documentation Features
-
-### Comprehensive Coverage
-- ✅ Every feature documented
-- ✅ 200+ code examples
-- ✅ 500+ configuration snippets
-- ✅ Real-world use cases
-- ✅ Troubleshooting guides
-
-### Easy to Navigate
-- 📑 Table of contents in every page
-- 🔗 Cross-references between pages
-- 🎯 Quick access links
-- 📊 Visual diagrams
-- 💡 Tips and best practices
-
-### Beginner Friendly
-- 📝 Step-by-step tutorials
-- 🎓 Learning paths
-- 🎨 Color-coded examples
-- ⚠️ Common mistake warnings
-- ✅ Checklists
-
-### Advanced Content
-- 🔧 Complex configurations
-- ⚡ Performance optimization
-- 🛠️ Developer API
-- 🎯 Advanced patterns
-- 📊 Use case studies
-
----
-
-## 🎯 Find What You Need
 
 ### By Topic
 
@@ -333,8 +224,6 @@ This wiki contains **25+ documentation pages** covering every aspect of OGUI Enh
 
 ---
 
-## 📞 Getting Help
-
 ### Self-Service
 
 **Try these first:**
@@ -342,12 +231,7 @@ This wiki contains **25+ documentation pages** covering every aspect of OGUI Enh
 2. [Troubleshooting.md](Troubleshooting.md) - Problem solving
 3. [Wiki-Index.md](Wiki-Index.md) - Find documentation
 
-### Community Support
 
-**Need help?**
-- 💬 Discord Server - Real-time help
-- 🐛 GitHub Issues - Bug reports
-- 📧 Email - Direct support
 
 ### Professional Support
 
@@ -400,15 +284,6 @@ This documentation is part of OGUI Enhanced and follows the same license.
 
 ---
 
-## 🌟 Why This Wiki Exists
-
-We created this comprehensive wiki because:
-
-✅ **Every feature deserves documentation**
-✅ **Users shouldn't have to guess**
-✅ **Examples are better than explanations**
-✅ **Troubleshooting should be easy**
-✅ **Learning should be accessible**
 
 **Our goal:** Make OGUI the most well-documented Minecraft plugin.
 
