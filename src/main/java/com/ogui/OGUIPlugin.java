@@ -7,6 +7,9 @@ import com.ogui.items.DefaultItemProvider;
 import com.ogui.items.ItemProvider;
 import com.ogui.listener.NPCInteractListener;
 import com.ogui.util.MessageManager;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import fr.minuskube.inv.InventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,8 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
 
-public class OGUIPlugin extends JavaPlugin {
+
+public class OGUIPlugin extends JavaPlugin implements Listener {
 
     private InventoryManager inventoryManager;
     private GuiRegistry guiRegistry;
@@ -33,6 +40,17 @@ public class OGUIPlugin extends JavaPlugin {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+
+
+        int pluginId = 29355;
+        Metrics metrics = new Metrics(this, pluginId);
+
+        metrics.addCustomChart(new SingleLineChart("guis_loaded", () ->
+                getGuiRegistry() != null ? getGuiRegistry().getGuiIds().size() : 0));
+
+        metrics.addCustomChart(new SimplePie("hook_oreoessentials", () ->
+                (getItemProvider() instanceof com.ogui.items.DefaultItemProvider dip && dip.hasOreoEconomy())
+                        ? "yes" : "no"));
 
         saveResource("guis.yml", false);
         saveResource("lang.yml", false);
@@ -69,7 +87,44 @@ public class OGUIPlugin extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("ModeledNPCs") != null) {
             getLogger().info(messageManager.getMessage("loading.modelednpcs"));
         }
+        Bukkit.getPluginManager().registerEvents(this, this);
+
+        Bukkit.getScheduler().runTask(this, () -> {
+            hookOreoEssentialsIfPresent();
+        });
+
     }
+
+    @EventHandler
+    public void onPluginEnable(PluginEnableEvent e) {
+        if (e.getPlugin().getName().equalsIgnoreCase("OreoEssentials")) {
+            hookOreoEssentialsIfPresent();
+        }
+    }
+
+    private boolean oreoHooked = false;
+
+    private void hookOreoEssentialsIfPresent() {
+        if (oreoHooked) return;
+
+        if (Bukkit.getPluginManager().getPlugin("OreoEssentials") == null) {
+            return;
+        }
+
+        oreoHooked = true;
+        getLogger().info("Detected OreoEssentials. Enabling Oreo hooks...");
+
+        if (itemProvider instanceof DefaultItemProvider) {
+            ((DefaultItemProvider) itemProvider).reloadHooks();
+        }
+
+
+        guiRegistry.reload();
+        unregisterGuiCommands();
+        registeredCommands.clear();
+        registerGuiCommands();
+    }
+
 
     @Override
     public void onDisable() {
@@ -173,10 +228,45 @@ public class OGUIPlugin extends JavaPlugin {
         }
     }
 
+    private void unregisterGuiCommands() {
+        try {
+            Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
+            commandMapField.setAccessible(true);
+            CommandMap commandMap = (CommandMap) commandMapField.get(getServer());
+
+            Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
+            knownCommandsField.setAccessible(true);
+
+            @SuppressWarnings("unchecked")
+            Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+
+            for (String cmdName : registeredCommands) {
+                knownCommands.remove(cmdName.toLowerCase());
+                knownCommands.remove(("ogui:" + cmdName).toLowerCase());
+
+                knownCommands.entrySet().removeIf(e ->
+                        e.getKey() != null &&
+                                (e.getKey().equalsIgnoreCase(cmdName) || e.getKey().equalsIgnoreCase("ogui:" + cmdName)));
+            }
+
+        } catch (Exception e) {
+            getLogger().warning("Failed to unregister GUI commands: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void reloadGuis() {
         messageManager.reload();
-        guiRegistry.reload();
+
+        if (itemProvider instanceof DefaultItemProvider) {
+            ((DefaultItemProvider) itemProvider).reloadHooks();
+        }
+
+        unregisterGuiCommands();
         registeredCommands.clear();
+
+        guiRegistry.reload();
+
         registerGuiCommands();
 
         Map<String, String> replacements = new HashMap<>();
@@ -184,4 +274,6 @@ public class OGUIPlugin extends JavaPlugin {
         getLogger().info(messageManager.getMessage("general.reload.success"));
         getLogger().info(messageManager.getMessage("general.reload.gui_count", replacements));
     }
+
+
 }

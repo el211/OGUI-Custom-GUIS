@@ -6,7 +6,7 @@
 
     <groupId>fr.oreo</groupId>
     <artifactId>OGUIPlugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OGUIPlugin</name>
@@ -40,6 +40,10 @@
                         </goals>
                         <configuration>
                             <relocations>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>com.ogui.libs.bstats</shadedPattern>
+                                </relocation>
                                 <relocation>
                                     <pattern>fr.minuskube.inv</pattern>
                                     <shadedPattern>com.ogui.libs.smartinvs</shadedPattern>
@@ -117,6 +121,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>
             <version>3.1.13</version>
@@ -160,13 +170,13 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-text-minimessage</artifactId>
-            <version> 4.24.0</version>
+            <version>4.24.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.lone</groupId>
             <artifactId>api-itemsadder</artifactId>
-            <version>4.0.10</version> <!-- Replace {version} with the latest version -->
+            <version>4.0.10</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

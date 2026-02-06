@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class ColorUtil {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
-    private static final Pattern GRADIENT_PATTERN = Pattern.compile("<gradient:(#[A-Fa-f0-9]{6}):(#[A-Fa-f0-9]{6})>([^<]+)</gradient>");
+    private static final Pattern GRADIENT_PATTERN = Pattern.compile("<gradient:((?:#[A-Fa-f0-9]{6}:?)+)>([^<]+)</gradient>");
     private static final Pattern RAINBOW_PATTERN = Pattern.compile("<rainbow>([^<]+)</rainbow>");
 
 
@@ -57,11 +57,31 @@ public class ColorUtil {
         StringBuffer buffer = new StringBuffer();
 
         while (matcher.find()) {
-            String startHex = matcher.group(1);
-            String endHex = matcher.group(2);
-            String text = matcher.group(3);
+            String colorsStr = matcher.group(1);
+            String text = matcher.group(2);
 
-            String gradientText = applyGradient(text, startHex, endHex);
+            String[] hexColors = colorsStr.split(":");
+            List<String> colorList = new ArrayList<>();
+            for (String hex : hexColors) {
+                if (hex != null && !hex.trim().isEmpty()) {
+                    colorList.add(hex.trim());
+                }
+            }
+
+            String gradientText;
+            if (colorList.size() >= 2) {
+                gradientText = applyMultiGradient(text, colorList);
+            } else if (colorList.size() == 1) {
+                try {
+                    ChatColor color = ChatColor.of(colorList.get(0));
+                    gradientText = color + text;
+                } catch (Exception e) {
+                    gradientText = text;
+                }
+            } else {
+                gradientText = text;
+            }
+
             matcher.appendReplacement(buffer, Matcher.quoteReplacement(gradientText));
         }
 
@@ -85,6 +105,65 @@ public class ColorUtil {
     }
 
 
+
+    private static String applyMultiGradient(String text, List<String> hexColors) {
+        // Convert hex strings to Color objects
+        List<Color> colors = new ArrayList<>();
+        for (String hex : hexColors) {
+            Color color = hexToColor(hex);
+            if (color != null) {
+                colors.add(color);
+            }
+        }
+
+        if (colors.isEmpty()) {
+            return text;
+        }
+
+        if (colors.size() == 1) {
+            try {
+                ChatColor chatColor = ChatColor.of(colors.get(0));
+                return chatColor + text;
+            } catch (Exception e) {
+                return text;
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+        int length = text.length();
+        int numColors = colors.size();
+
+        for (int i = 0; i < length; i++) {
+            char c = text.charAt(i);
+
+            double position = (double) i / Math.max(1, length - 1);
+
+            double segmentSize = 1.0 / (numColors - 1);
+            int segmentIndex = (int) (position / segmentSize);
+
+            if (segmentIndex >= numColors - 1) {
+                segmentIndex = numColors - 2;
+            }
+
+            double segmentPosition = (position - (segmentIndex * segmentSize)) / segmentSize;
+
+            Color startColor = colors.get(segmentIndex);
+            Color endColor = colors.get(segmentIndex + 1);
+            Color interpolated = interpolateColor(startColor, endColor, segmentPosition);
+
+            try {
+                ChatColor chatColor = ChatColor.of(interpolated);
+                result.append(chatColor).append(c);
+            } catch (Exception e) {
+                result.append(c);
+            }
+        }
+
+        return result.toString();
+    }
+
+
+
     private static String applyGradient(String text, String startHex, String endHex) {
         Color startColor = hexToColor(startHex);
         Color endColor = hexToColor(endHex);
@@ -102,8 +181,12 @@ public class ColorUtil {
             double ratio = (double) i / Math.max(1, length - 1);
             Color color = interpolateColor(startColor, endColor, ratio);
 
-            ChatColor chatColor = ChatColor.of(color);
-            result.append(chatColor).append(c);
+            try {
+                ChatColor chatColor = ChatColor.of(color);
+                result.append(chatColor).append(c);
+            } catch (Exception e) {
+                result.append(c);
+            }
         }
 
         return result.toString();
@@ -120,8 +203,12 @@ public class ColorUtil {
             float hue = (float) i / length;
             Color color = Color.getHSBColor(hue, 1.0f, 1.0f);
 
-            ChatColor chatColor = ChatColor.of(color);
-            result.append(chatColor).append(c);
+            try {
+                ChatColor chatColor = ChatColor.of(color);
+                result.append(chatColor).append(c);
+            } catch (Exception e) {
+                result.append(c);
+            }
         }
 
         return result.toString();

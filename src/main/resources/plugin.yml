@@ -1,14 +1,23 @@
 name: OGUI
-version: 1.0.0
+version: 1.0.2
 main: com.ogui.OGUIPlugin
 api-version: 1.13
-softdepend: [Vault]
+
+softdepend:
+  - Vault
+  - OreoEssentials
+  - PlaceholderAPI
+  - ItemsAdder
+  - Nexo
+  - WorldGuard
+  - ModeledNPCs
 commands:
   ogui:
     description: Open or reload OGUI menus.
     usage: /ogui <open|reload> [id] [player]
     permission: ogui.command
     aliases: [gui, omenu]
+
 permissions:
   ogui.command:
     default: true

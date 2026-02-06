@@ -359,4 +359,365 @@ errors:
 #
 #   &#FFD700&l→ Line 1: &f{value1}
 #   &#00FF00&l→ Line 2: &f{value2}
-# ============================================
+# ============================================# ============================================
+## OGUI Enhanced - Language File (FULL COLOR)
+## ============================================
+## Features:
+## ✓ Hex colors (&#RRGGBB)
+## ✓ Gradients (<gradient:#START:#END>text</gradient>)
+## ✓ Rainbow effects (<rainbow>text</rainbow>)
+## ✓ Legacy codes (&c, &l, etc.)
+## ✓ PlaceholderAPI support
+## ============================================
+#
+## ============================================
+## GENERAL MESSAGES
+## ============================================
+#general:
+#  prefix: "<gradient:#FFD700:#FF8C00>&l[OGUI]</gradient> &r"
+#  no_permission: "<gradient:#FF0000:#FF6B6B>✖ Access Denied</gradient> &7→ &fYou don't have permission to do that."
+#  player_only: "&#FF4444&l⚠ &cOnly players can use this command."
+#  gui_not_found: "<gradient:#FF0000:#FF6B6B>✖ GUI Not Found</gradient> &7→ &f{gui}"
+#  player_not_found: "&#FF6B6B✖ Player not found: &f{player}"
+#
+#  reload:
+#    success: "<gradient:#00FF00:#32CD32>✔ Success!</gradient> &7OGUI menus reloaded."
+#    gui_count: "  &#00FFFF→ &7Loaded &f{count} &7GUI(s)"
+#    npc_bindings: "  &#00FFFF→ &7NPC bindings: &f{count}"
+#
+#  gui_opened: "<gradient:#00FF00:#00FFFF>✔ Opened</gradient> &7GUI &f{gui} &7for &f{player}"
+#
+## ============================================
+## COMMAND MESSAGES
+## ============================================
+#commands:
+#  usage:
+#    main: "<gradient:#FFD700:#FFA500>&l⚡ OGUI Enhanced</gradient>"
+#    line1: "&7Usage: &f/ogui &7<&bopen&7|&breload&7> &8[&fid&8] &8[&fplayer&8]"
+#    examples_header: "&#00FFFF&l→ Examples:"
+#    example1: "  &#32CD32/ogui open shop"
+#    example2: "  &#32CD32/ogui open shop &fPlayerName"
+#    example3: "  &#32CD32/ogui reload"
+#
+#  open:
+#    usage: "&#FF6B6B&l⚠ Usage: &c/ogui open &f<id> &8[player]"
+#    available: "<gradient:#00FFFF:#0099FF>Available GUIs:</gradient> &f{guis}"
+#    console_requires_player: "&#FF4444&l⚠ &cYou must specify a player from console."
+#
+#  reload:
+#    no_permission: "<gradient:#FF0000:#FF6B6B>✖ Permission Denied</gradient> &7→ &fYou cannot reload GUIs."
+#
+#  unknown_subcommand: "&#FF6B6B&l? &cUnknown subcommand: &f{subcommand}"
+#  help_hint: "&7Use &#FFD700/ogui &7for help"
+#
+## ============================================
+## CONDITION ERROR MESSAGES
+## ============================================
+#conditions:
+#  # Vault Money
+#  vault_money:
+#    insufficient: |
+#      <gradient:#FF0000:#FFD700>💰 Insufficient Funds!</gradient>
+#
+#      &#FFD700&l→ Required: &f${amount}
+#      &#00FF00&l→ Balance: &f${balance}
+#    economy_unavailable: "<gradient:#FF0000:#FF6B6B>⚠ Economy Unavailable</gradient> &7→ &fVault not found!"
+#
+#  # OreoEssentials Currency
+#  oreo_currency:
+#    insufficient: |
+#      <gradient:#FF6B6B:#FFD700>✖ Insufficient {currency}!</gradient>
+#
+#      &#FFD700&l→ Required: &f{amount}
+#      &#00FF00&l→ Balance: &f{balance}
+#    currency_not_found: "&#FF4444✖ Currency not found: &#FFD700{currency}"
+#    unavailable: "<gradient:#FF0000:#FF6B6B>⚠ OreoEssentials Unavailable</gradient>"
+#    failed_check: "&#FF6B6B✖ Failed to check balance!"
+#
+#  # XP Levels
+#  xp_level:
+#    insufficient: |
+#      <gradient:#00FFFF:#0099FF>⭐ Insufficient XP Levels!</gradient>
+#
+#      &#00FFFF&l→ Required: &f{amount} &7levels
+#      &#FFD700&l→ Current: &f{current} &7levels
+#
+#  # XP Points
+#  xp_points:
+#    insufficient: |
+#      <gradient:#32CD32:#FFD700>✦ Insufficient Experience!</gradient>
+#
+#      &#32CD32&l→ Required: &f{amount} &7XP
+#      &#FFD700&l→ Current: &f{current} &7XP
+#
+#  # Items
+#  item:
+#    insufficient: |
+#      <gradient:#FF6B6B:#FFA500>📦 Insufficient Items!</gradient>
+#
+#      &#FFA500&l→ Required: &f{amount}x {item}
+#      &#FFD700&l→ Current: &f{current}x
+#
+#  # ItemsAdder
+#  itemsadder:
+#    insufficient: |
+#      <gradient:#9D4EDD:#E0AAFF>✨ Insufficient Custom Items!</gradient>
+#
+#      &#9D4EDD&l→ Required: &f{amount}x {item}
+#      &#E0AAFF&l→ Current: &f{current}x
+#    unavailable: "&#9D4EDD✖ ItemsAdder is not available!"
+#
+#  # Nexo
+#  nexo:
+#    insufficient: |
+#      <gradient:#0096FF:#00D9FF>⚡ Insufficient Nexo Items!</gradient>
+#
+#      &#0096FF&l→ Required: &f{amount}x {item}
+#      &#00D9FF&l→ Current: &f{current}x
+#    unavailable: "&#0096FF✖ Nexo is not available!"
+#
+#  # Permissions
+#  permission:
+#    missing: |
+#      <gradient:#FF0000:#FF6B6B:#FFA500>🔒 ACCESS DENIED</gradient>
+#
+#      &#FF6B6B&l→ Required: &#FFD700{permission}
+#
+#  # WorldGuard Regions
+#  worldguard_region:
+#    not_in_region: |
+#      <gradient:#FF6B6B:#FFA500>📍 Wrong Location!</gradient>
+#
+#      &#FFA500&l→ Required region: &#FFD700{region}
+#    not_member: |
+#      <gradient:#FF0000:#FF6B6B>🔐 Region Access Denied</gradient>
+#
+#      &#FF6B6B&l→ You must be a member of: &#FFD700{region}
+#
+#  # PlaceholderAPI
+#  placeholder:
+#    condition_not_met: |
+#      <gradient:#FF6B6B:#FFA500>✖ Condition Not Met</gradient>
+#
+#      &#FFA500&l→ Check: &#FFD700{placeholder} {operator} {value}
+#
+#  # Weather
+#  weather:
+#    wrong_weather: |
+#      <gradient:#00BFFF:#87CEEB>🌤 Wrong Weather!</gradient>
+#
+#      &#00BFFF&l→ Required: &#FFD700{required}
+#      &#87CEEB&l→ Current: &#FF6B6B{current}
+#
+#  # World
+#  world:
+#    wrong_world: |
+#      <gradient:#8B4513:#D2691E>🌍 Wrong World!</gradient>
+#
+#      &#D2691E&l→ Required: &#FFD700{worlds}
+#      &#8B4513&l→ Current: &#FF6B6B{current}
+#    blacklisted: |
+#      <gradient:#FF0000:#8B0000>⛔ Restricted World</gradient>
+#
+#      &#FF6B6B&l→ Cannot use in: &#FFD700{world}
+#
+#  # ModeledNPC
+#  modeled_npc:
+#    too_far: |
+#      <gradient:#00FFFF:#0099FF>📍 Get Closer!</gradient>
+#
+#      &#00FFFF&l→ Target: &#FFD700{npc}
+#      &#0099FF&l→ Distance: &#FF6B6B{distance}m &7/ &#32CD32{radius}m
+#    npc_not_found: "&#FF6B6B✖ NPC does not exist: &#FFD700ID {id}"
+#    wrong_world: |
+#      <gradient:#FF6B6B:#FFA500>🌍 Wrong World!</gradient>
+#
+#      &#FFA500&l→ Required world: &#FFD700{world}
+#    unavailable: "&#FF6B6B⚠ ModeledNPCs not available!"
+#    location_unavailable: "&#FF6B6B✖ Could not find NPC: &#FFD700{npc}"
+#
+#  # OreoWarps
+#  oreo_warps:
+#    warp_not_found: |
+#      <gradient:#FF6B6B:#FFA500>✖ Warp Not Found</gradient>
+#
+#      &#FFA500&l→ Warp: &#FFD700{warp}
+#    no_permission: |
+#      <gradient:#FF0000:#FF6B6B>🔒 Warp Access Denied</gradient>
+#
+#      &#FF6B6B&l→ Warp: &#FFD700{warp}
+#    permission_required: "&7  &8(Required: &#FFD700{permission}&8)"
+#    condition_not_met: "&#FF6B6B✖ Condition not met for warp: &#FFD700{warp}"
+#    unavailable: "&#FF6B6B⚠ OreoEssentials not available!"
+#
+#  # OreoWarps Location
+#  oreo_warps_location:
+#    too_far: |
+#      <gradient:#00FFFF:#FF1493>🗺 Wrong Location!</gradient>
+#
+#      &#00FFFF&l→ Required: &#FFD700{warp}
+#      &#FF1493&l→ Distance: &#FF6B6B{distance}m &7/ &#32CD32{radius}m
+#    warp_not_found: "&#FF6B6B✖ Warp does not exist: &#FFD700{warp}"
+#    wrong_world: |
+#      <gradient:#FF6B6B:#FFA500>🌍 Wrong World!</gradient>
+#
+#      &#FFA500&l→ Required: &#FFD700{world}
+#      &#FF6B6B&l→ Current: &#32CD32{current}
+#    unavailable: "&#FF6B6B⚠ OreoEssentials not available!"
+#
+#  # General
+#  transaction_failed: "<gradient:#FF0000:#8B0000>✖ Transaction Failed</gradient> &7→ &fPlease try again!"
+#
+## ============================================
+## PURCHASE MESSAGES
+## ============================================
+#purchase:
+#  success:
+#    money: "<gradient:#00FF00:#32CD32>✔ Purchase Complete!</gradient> &7Cost: &#FFD700${amount}"
+#    currency: "<gradient:#00FF00:#32CD32>✔ Purchase Complete!</gradient> &7Cost: &#FFD700{amount} {currency}"
+#    item: "<gradient:#00FF00:#32CD32>✔ Trade Complete!</gradient> &7Traded: &#FFA500{amount}x {item}"
+#    xp_level: "<gradient:#00FFFF:#0099FF>✔ XP Spent!</gradient> &7Cost: &#FFD700{amount} &7levels"
+#    xp_points: "<gradient:#32CD32:#FFD700>✔ XP Spent!</gradient> &7Cost: &#FFD700{amount} &7XP"
+#
+#  failed:
+#    general: "<gradient:#FF0000:#FF6B6B>✖ Purchase Failed!</gradient> &7→ &fPlease try again."
+#    no_money: "<gradient:#FF0000:#FFD700>💰 Insufficient Funds!</gradient> &7→ &fYou don't have enough money."
+#    no_permission: "<gradient:#FF0000:#FF6B6B>🔒 Purchase Denied</gradient> &7→ &fYou don't have permission."
+#
+## ============================================
+## NPC MESSAGES
+## ============================================
+#npc:
+#  gui_opened: "<gradient:#00FF00:#00FFFF>✔ GUI Opened</gradient> &7→ &#FFD700'{gui}' &7via NPC &#00FFFF{id}"
+#  interaction_logged: "Player {player} opened GUI '{gui}' via NPC {id}"
+#  no_gui_bound: "&#FF6B6B✖ This NPC has no GUI configured."
+#
+## ============================================
+## ITEM PROVIDER MESSAGES
+## ============================================
+#items:
+#  invalid_material: "&#FF6B6B✖ Invalid material: &#FFD700{material}"
+#  itemsadder_not_found: "&#9D4EDD✖ ItemsAdder item not found: &#FFD700{item}"
+#  nexo_not_found: "&#0096FF✖ Nexo item not found: &#FFD700{item}"
+#  unknown_type: "&#FF6B6B✖ Unknown item type: &#FFD700{type}"
+#
+## ============================================
+## LOADING MESSAGES (Console)
+## ============================================
+#loading:
+#  enabled: "<gradient:#00FF00:#32CD32>OGUI Enhanced</gradient> enabled with support for:"
+#  oreo_currencies: "  &#FFD700→ &7OreoEssentials Custom Currencies"
+#  oreo_warps: "  &#00FFFF→ &7OreoEssentials Warps"
+#  itemsadder: "  &#9D4EDD→ &7ItemsAdder Custom Items"
+#  nexo: "  &#0096FF→ &7Nexo Custom Items"
+#  worldguard: "  &#FFA500→ &7WorldGuard Regions"
+#  placeholderapi: "  &#32CD32→ &7PlaceholderAPI Conditions"
+#  weather_world: "  &#00BFFF→ &7Weather & World Conditions"
+#  modelednpcs: "  &#FF1493→ &7ModeledNPCs Integration ✓"
+#
+#  gui_loaded: "&#32CD32✓ &7Loaded &f{count} &7GUI definition(s)"
+#  command_registered: "&#00FFFF→ &7Registered: &f/{command} &7→ &f{gui}"
+#  npc_listener: "&#FF1493✓ &7NPC listener active - &f{count} &7GUI(s) bound"
+#  npc_binding: "&#FFD700→ &7GUI &f'{gui}' &7→ NPC &f{id}"
+#
+#  item_provider: "&#9D4EDD✓ &7ItemProvider: Vanilla, ItemsAdder, Nexo"
+#
+#  disabled: "&#FF6B6B✖ &7OGUI Enhanced disabled"
+#
+## ============================================
+## ERROR MESSAGES (Console)
+## ============================================
+#errors:
+#  gui_load_failed: "&#FF0000✖ Failed to load GUI '{gui}': {error}"
+#  invalid_slot: "&#FF6B6B✖ Invalid slot '{slot}' in GUI {gui}"
+#  invalid_material: "&#FF6B6B✖ Invalid material '{material}' in condition"
+#  item_load_failed: "&#FF0000✖ Failed to load item at slot {slot} in GUI {gui}: {error}"
+#  condition_parse_failed: "&#FF6B6B✖ Failed to parse condition: {error}"
+#  unknown_condition_type: "&#FFA500⚠ Unknown condition type: {type}"
+#  world_condition_no_worlds: "&#FFA500⚠ World condition has no worlds specified"
+#  command_register_failed: "&#FF0000✖ Failed to register GUI commands: {error}"
+#  npc_listener_register_failed: "&#FF6B6B✖ Failed to register NPC listener: {error}"
+#
+#  guis_yml_not_found: "&#FFA500⚠ guis.yml not found! Creating default file..."
+#  no_guis_section: "&#FFA500⚠ No guis section found in guis.yml"
+#
+#  itemsadder_get_failed: "&#9D4EDD✖ Failed to get ItemsAdder item '{item}': {error}"
+#  nexo_get_failed: "&#0096FF✖ Failed to get Nexo item '{item}': {error}"
+#
+#  worldguard_check_failed: "&#FFA500⚠ WorldGuard check failed: {error}"
+#  npc_proximity_check_failed: "&#FF1493✖ Failed to check NPC proximity: {error}"
+#  npc_not_exist: "&#FF6B6B✖ NPC with ID {id} does not exist!"
+#  npc_location_unavailable: "&#FF6B6B✖ Could not get location for NPC {id}"
+#
+#  oreo_warps_check_failed: "&#00FFFF⚠ Failed to check OreoEssentials warp: {error}"
+#  oreo_warps_service_failed: "&#FF6B6B✖ Failed to get OreoEssentials WarpService: {error}"
+#
+## ============================================
+## PLACEHOLDERS (for messages)
+## ============================================
+## Available placeholders:
+## {gui} - GUI ID
+## {player} - Player name
+## {amount} - Amount (money, items, xp, etc.)
+## {balance} - Current balance
+## {currency} - Currency name
+## {item} - Item name
+## {current} - Current amount player has
+## {permission} - Permission node
+## {region} - WorldGuard region name
+## {placeholder} - PlaceholderAPI placeholder
+## {operator} - Comparison operator
+## {value} - Comparison value
+## {required} - Required weather/condition
+## {world} - World name
+## {worlds} - List of worlds
+## {npc} - NPC name
+## {id} - NPC/GUI ID
+## {distance} - Distance in blocks
+## {radius} - Required radius
+## {warp} - Warp name
+## {command} - Command name
+## {subcommand} - Subcommand name
+## {count} - Count of items
+## {error} - Error message
+## {slot} - Inventory slot
+## {type} - Condition/item type
+## {material} - Material name
+##
+## PlaceholderAPI Support:
+## Use any PlaceholderAPI placeholder: %player_name%, %vault_eco_balance%, etc.
+## Example: "Player %player_name% has ${balance}"
+##
+## Color Format Support:
+## Legacy: &c (red), &a (green), &e (yellow), &l (bold), &n (underline)
+## Hex: &#RRGGBB (e.g., &#FF0000 for red, &#FFD700 for gold)
+## Gradients: <gradient:#START:#END>text</gradient>
+## Rainbow: <rainbow>text</rainbow>
+## ============================================
+#
+## ============================================
+## ADVANCED EXAMPLES (COPY THESE!)
+## ============================================
+##
+## Fire Gradient:
+## <gradient:#FF0000:#FF6600:#FFFF00>🔥 Fire text 🔥</gradient>
+##
+## Ocean Wave:
+## <gradient:#0000FF:#00FFFF:#1E90FF>🌊 Ocean waves 🌊</gradient>
+##
+## Sunset:
+## <gradient:#FF6B6B:#FFD93D:#6BCB77>🌅 Beautiful sunset 🌅</gradient>
+##
+## Neon Glow:
+## <gradient:#FF00FF:#00FFFF>⚡ Neon effect ⚡</gradient>
+##
+## Gold Shine:
+## <gradient:#FFD700:#FFED4E:#FFD700>✨ Shiny gold ✨</gradient>
+##
+## Multi-line with colors:
+## insufficient: |
+##   <gradient:#FF0000:#FFD700>💰 Title Here</gradient>
+##
+##   &#FFD700&l→ Line 1: &f{value1}
+##   &#00FF00&l→ Line 2: &f{value2}
+## ============================================
