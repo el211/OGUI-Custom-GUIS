@@ -1524,14 +1524,21 @@ guis:
         commands:
           - "give {player} diamond 10"
         close: true
+
+
+# ============================================
+# OGUI Enhanced - NPC Binding Examples
+# ============================================
+
   # ================================
-  # Example 1: NPC Opens GUI on Click
+  # Example 1: Simple NPC Shop
   # ================================
-  # When player clicks NPC ID 1, this GUI opens
+  # When player clicks NPC ID 1, this GUI opens automatically
   blacksmith_shop:
     title: "<gradient:#FF4500:#FFD700>⚒ Blacksmith Shop ⚒</gradient>"
     rows: 4
-    npc_id: 1  # THIS NPC WILL OPEN THIS GUI WHEN CLICKED
+    npc_id: 1  # NPC ID that opens this GUI
+    commands: []  # Optional: commands like /blacksmith to also open this GUI
     items:
 
       10:
@@ -1544,7 +1551,7 @@ guis:
           - ""
           - "&eClick to purchase!"
         commands:
-          - "give {player} diamond_sword{Enchantments:[{id:\"minecraft:fire_aspect\",lvl:2},{id:\"minecraft:sharpness\",lvl:5}],display:{Name:'{\"text\":\"Flaming Sword\",\"color\":\"red\"}'}} 1"
+          - "give {player} diamond_sword 1"
         close: true
         conditions:
           - type: VAULT_MONEY
@@ -1558,48 +1565,24 @@ guis:
           - ""
           - "&#FF1493Cost: &f$10,000"
         commands:
-          - "give {player} diamond_helmet{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
-          - "give {player} diamond_chestplate{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
-          - "give {player} diamond_leggings{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
-          - "give {player} diamond_boots{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
+          - "give {player} diamond_helmet 1"
+          - "give {player} diamond_chestplate 1"
+          - "give {player} diamond_leggings 1"
+          - "give {player} diamond_boots 1"
         close: true
         conditions:
           - type: VAULT_MONEY
             amount: 10000.0
 
-      13:
-        material: ANVIL
-        name: "&#FFD700&lRepair Service"
-        lore:
-          - "&7Repair your equipment!"
-          - ""
-          - "&#FF1493Cost: &f$500"
-        commands:
-          - "repair hand"
-          - "tellraw {player} {\"text\":\"Item repaired!\",\"color\":\"gold\"}"
-        close: true
-        conditions:
-          - type: VAULT_MONEY
-            amount: 500.0
-
-      22:
-        material: BOOK
-        name: "&#9400D3&lTalk to Blacksmith"
-        lore:
-          - "&7Start a conversation"
-          - ""
-          - "&eClick to talk!"
-        commands:
-          - "npc:dialog 1"  # Opens ModeledNPCs dialogue for NPC ID 1
-        close: true
-
   # ================================
-  # Example 2: Trader NPC
+  # Example 2: Merchant NPC
   # ================================
   merchant_shop:
     title: "<gradient:#00FF00:#FFD700>🏪 Merchant 🏪</gradient>"
     rows: 5
     npc_id: 2  # Merchant NPC opens this GUI
+    commands:
+      - "merchant"  # Also can be opened with /merchant command
     items:
 
       10:
@@ -1630,52 +1613,15 @@ guis:
           - type: VAULT_MONEY
             amount: 5000.0
 
-      12:
-        material: GOLD_INGOT
-        name: "&#FFD700&lGold Package"
-        lore:
-          - "&7Stack of gold"
-          - ""
-          - "&#FF1493Cost: &f$500"
-        commands:
-          - "give {player} gold_ingot 64"
-        close: true
-        conditions:
-          - type: VAULT_MONEY
-            amount: 500.0
-
-      19:
-        material: ENDER_PEARL
-        name: "&#9400D3&lTeleport Scrolls"
-        lore:
-          - "&7Ender pearls for travel"
-          - ""
-          - "&#FF1493Cost: &f$2,000"
-        commands:
-          - "give {player} ender_pearl 16"
-        close: true
-        conditions:
-          - type: VAULT_MONEY
-            amount: 2000.0
-
-      31:
-        material: ENCHANTED_BOOK
-        name: "&#FF1493&lStart Quest"
-        lore:
-          - "&7Begin the merchant's quest"
-          - ""
-          - "&eClick to accept!"
-        commands:
-          - "npc:quest merchant_quest"  # Assigns quest via ModeledNPCs
-        close: true
-
   # ================================
-  # Example 3: VIP NPC with Permissions
+  # Example 3: VIP NPC with Location Check
   # ================================
-  vip_npc_shop:
+  nvip_shop:
     title: "<gradient:#9400D3:#FF1493>👑 VIP Lounge 👑</gradient>"
     rows: 3
-    npc_id: 3  # VIP NPC
+    npc_id: 3  # VIP NPC ID
+    commands:
+      - "nvipshop"
     items:
 
       10:
@@ -1686,40 +1632,47 @@ guis:
           - ""
           - "&#FF1493Requirements:"
           - "  &f✦ VIP Permission"
-          - "  &f✦ Near VIP NPC"
+          - "  &f✦ Be near VIP NPC"
           - ""
           - "&eClick to claim!"
         commands:
           - "eco give {player} 10000"
           - "give {player} nether_star 1"
-          - "broadcast <gradient:#9400D3:#FF1493>{player} claimed VIP bonus!</gradient>"
         close: true
         conditions:
           - type: PERMISSION
             permission: "vip.access"
           - type: MODELED_NPC
             npc_id: 3
-            radius: 5.0
+            radius: 5.0  # Must be within 5 blocks of NPC #3
 
       13:
-        material: PLAYER_HEAD
-        name: "&#00FFFF&lTalk to VIP Manager"
+        material: DIAMOND
+        name: "&#00FFFF&lPremium Item"
         lore:
-          - "&7Start VIP dialogue"
+          - "&7VIP exclusive item"
+          - ""
+          - "&#FF1493Cost: &f$50,000"
         commands:
-          - "npc:dialog 3"
+          - "give {player} diamond 64"
         close: true
+        conditions:
+          - type: PERMISSION
+            permission: "vip.access"
+          - type: VAULT_MONEY
+            amount: 50000.0
 
   # ================================
-  # Example 4: Location-Based NPC Shop
+  # Example 4: Arena Master with Proximity
   # ================================
   arena_master:
     title: "&c&l⚔ Arena Master ⚔"
     rows: 4
     npc_id: 4  # Arena Master NPC
+    commands: []
     items:
 
-      # Must be NEAR the NPC to purchase
+      # Players MUST be near the NPC to buy this
       10:
         material: DIAMOND_SWORD
         name: "&c&lPvP Kit"
@@ -1728,7 +1681,7 @@ guis:
           - ""
           - "&#FF1493Requirements:"
           - "  &f✦ $5,000"
-          - "  &f✦ Near Arena Master"
+          - "  &f✦ Within 10 blocks of Arena Master"
           - ""
           - "&eClick to buy!"
         commands:
@@ -1743,7 +1696,7 @@ guis:
             amount: 5000.0
           - type: MODELED_NPC
             npc_id: 4
-            radius: 10.0  # Must be within 10 blocks
+            radius: 10.0  # MUST be within 10 blocks of NPC #4
 
       11:
         material: GOLDEN_APPLE
@@ -1756,7 +1709,6 @@ guis:
           - "  &f✦ Near Arena Master"
         commands:
           - "give {player} golden_apple 16"
-          - "give {player} potion{Potion:\"minecraft:strong_healing\"} 5"
         close: true
         conditions:
           - type: VAULT_MONEY
@@ -1765,39 +1717,15 @@ guis:
             npc_id: 4
             radius: 10.0
 
-      13:
-        material: ENDER_PEARL
-        name: "&d&lJoin Tournament"
-        lore:
-          - "&7Enter the PvP tournament"
-          - ""
-          - "&#FF1493Cost: &f$10,000 entry"
-        commands:
-          - "tournament join {player}"
-        close: true
-        conditions:
-          - type: VAULT_MONEY
-            amount: 10000.0
-          - type: MODELED_NPC
-            npc_id: 4
-            radius: 15.0
-
-      22:
-        material: BOOK
-        name: "&e&lArena Rules"
-        lore:
-          - "&7Talk to Arena Master"
-        commands:
-          - "npc:dialog 4"
-        close: false
-
   # ================================
-  # Example 5: Quest Giver NPC
+  # Example 5: Quest NPC
   # ================================
   quest_npc:
     title: "&#FFD700&l📜 Quest Board 📜"
     rows: 3
     npc_id: 5  # Quest Giver NPC
+    commands:
+      - "quests"
     items:
 
       10:
@@ -1810,7 +1738,8 @@ guis:
           - ""
           - "&eClick to accept!"
         commands:
-          - "npc:quest beginner_quest"
+          - "tellraw {player} {\"text\":\"Quest started!\",\"color\":\"green\"}"
+          - "eco give {player} 500"
         close: true
 
       11:
@@ -1823,7 +1752,8 @@ guis:
           - ""
           - "&#FF1493Requires: &fLevel 10+"
         commands:
-          - "npc:quest intermediate_quest"
+          - "tellraw {player} {\"text\":\"Quest started!\",\"color\":\"aqua\"}"
+          - "eco give {player} 2000"
         close: true
         conditions:
           - type: XP_LEVEL
@@ -1841,7 +1771,8 @@ guis:
           - "  &f✦ Level 50+"
           - "  &f✦ $10,000 deposit"
         commands:
-          - "npc:quest advanced_quest"
+          - "tellraw {player} {\"text\":\"Quest started!\",\"color\":\"red\"}"
+          - "eco give {player} 50000"
         close: true
         conditions:
           - type: XP_LEVEL
@@ -1849,87 +1780,34 @@ guis:
           - type: VAULT_MONEY
             amount: 10000.0
 
-      16:
-        material: ENCHANTED_BOOK
-        name: "&#9400D3&lView My Quests"
-        lore:
-          - "&7Check active quests"
-        commands:
-          - "quests"
-        close: false
-
   # ================================
-  # Example 6: Multi-NPC Shop System
+  # Example 6: GUI WITHOUT NPC (Command Only)
   # ================================
-  general_npc_shop:
-    title: "&6&lNPC Interaction Menu"
+  # This GUI can only be opened with /shop command
+  # NOT bound to any NPC
+  command_only_shop:
+    title: "&6&lCommand Shop"
     rows: 3
-    # NO npc_id = Opens via /shop command
-    # But items require being near specific NPCs
+    # NO npc_id field = not bound to any NPC
+    commands:
+      - "shop"  # Only opens with /shop command
     items:
 
-      # Blacksmith items (must be near NPC 1)
-      10:
-        material: ANVIL
-        name: "&c&lBlacksmith Services"
+      13:
+        material: DIAMOND
+        name: "&bDiamond"
         lore:
-          - "&7Must be near Blacksmith"
-          - "&7NPC ID: 1"
+          - "&7Buy a diamond"
           - ""
-          - "&eClick for options!"
+          - "&#FF1493Cost: &f$1,000"
         commands:
-          - "opengui blacksmith_shop {player}"
-        close: false
+          - "give {player} diamond 1"
+        close: true
         conditions:
-          - type: MODELED_NPC
-            npc_id: 1
-            radius: 10.0
+          - type: VAULT_MONEY
+            amount: 1000.0
 
-      # Merchant items (must be near NPC 2)
-      12:
-        material: EMERALD
-        name: "&a&lMerchant Trades"
-        lore:
-          - "&7Must be near Merchant"
-          - "&7NPC ID: 2"
-        commands:
-          - "opengui merchant_shop {player}"
-        close: false
-        conditions:
-          - type: MODELED_NPC
-            npc_id: 2
-            radius: 10.0
 
-      # VIP NPC (must be near NPC 3 AND have permission)
-      14:
-        material: NETHER_STAR
-        name: "&#9400D3&lVIP Services"
-        lore:
-          - "&7Must be near VIP NPC"
-          - "&7AND have VIP permission"
-        commands:
-          - "opengui vip_npc_shop {player}"
-        close: false
-        conditions:
-          - type: MODELED_NPC
-            npc_id: 3
-            radius: 10.0
-          - type: PERMISSION
-            permission: "vip.access"
-
-      # Arena Master
-      16:
-        material: DIAMOND_SWORD
-        name: "&c&lArena Master"
-        lore:
-          - "&7Must be at arena"
-        commands:
-          - "opengui arena_master {player}"
-        close: false
-        conditions:
-          - type: MODELED_NPC
-            npc_id: 4
-            radius: 15.0
   # ================================
   # Example 1: Default Settings
   # ================================

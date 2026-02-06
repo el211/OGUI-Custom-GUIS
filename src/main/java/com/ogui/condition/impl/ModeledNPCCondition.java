@@ -4,7 +4,6 @@ import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
 import fr.elias.npcs.api.ModeledNPCsAPI;
-import fr.elias.npcs.data.INPCData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,13 +31,15 @@ public class ModeledNPCCondition implements Condition {
 
     @Override
     public boolean check(Player player) {
-        if (!isAvailable()) return false;
+        if (!isAvailable()) {
+            return false;
+        }
 
         try {
             ModeledNPCsAPI api = ModeledNPCsAPI.get();
 
-            INPCData npcData = api.getNPCById(npcId);
-            if (npcData == null) {
+            // Check if NPC exists by checking if it's in the list of all NPCs
+            if (!api.getAllNPCIds().contains(npcId)) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("id", String.valueOf(npcId));
                 plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.npc_not_exist", replacements));
@@ -55,10 +56,12 @@ public class ModeledNPCCondition implements Condition {
 
             Location playerLocation = player.getLocation();
 
+            // Check if in same world
             if (!npcLocation.getWorld().equals(playerLocation.getWorld())) {
                 return false;
             }
 
+            // Check distance
             double distance = playerLocation.distance(npcLocation);
             return distance <= radius;
 
@@ -72,6 +75,7 @@ public class ModeledNPCCondition implements Condition {
 
     @Override
     public boolean take(Player player) {
+        // This condition doesn't consume anything, it just checks proximity
         return check(player);
     }
 
@@ -83,17 +87,18 @@ public class ModeledNPCCondition implements Condition {
 
         try {
             ModeledNPCsAPI api = ModeledNPCsAPI.get();
-            INPCData npcData = api.getNPCById(npcId);
 
-            if (npcData == null) {
+            // Check if NPC exists
+            if (!api.getAllNPCIds().contains(npcId)) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("id", String.valueOf(npcId));
                 return plugin.getMessageManager().getMessage("conditions.modeled_npc.npc_not_found", player, replacements);
             }
 
+            // Get NPC display name
             String npcName = api.getNPCDisplayName(npcId);
             if (npcName == null) {
-                npcName = npcData.getName();
+                npcName = "NPC #" + npcId;
             }
 
             Location npcLocation = api.getNPCLocation(npcId);
@@ -105,12 +110,14 @@ public class ModeledNPCCondition implements Condition {
 
             Location playerLocation = player.getLocation();
 
+            // Wrong world
             if (!npcLocation.getWorld().equals(playerLocation.getWorld())) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("world", npcLocation.getWorld().getName());
                 return plugin.getMessageManager().getMessage("conditions.modeled_npc.wrong_world", player, replacements);
             }
 
+            // Too far
             double distance = playerLocation.distance(npcLocation);
 
             Map<String, String> replacements = new HashMap<>();
@@ -133,5 +140,13 @@ public class ModeledNPCCondition implements Condition {
     private boolean isAvailable() {
         return Bukkit.getPluginManager().getPlugin("ModeledNPCs") != null
                 && ModeledNPCsAPI.get() != null;
+    }
+
+    public int getNpcId() {
+        return npcId;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 }

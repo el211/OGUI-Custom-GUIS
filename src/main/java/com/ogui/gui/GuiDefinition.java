@@ -51,13 +51,17 @@ public class GuiDefinition {
         return Collections.unmodifiableList(commands);
     }
 
-
     public Integer getNpcId() {
         return npcId;
     }
 
     public boolean hasNpcBinding() {
         return npcId != null;
+    }
+
+
+    public boolean isNpcBound(int checkNpcId) {
+        return npcId != null && npcId == checkNpcId;
     }
 
     public SmartInventory createInventory(InventoryManager manager, OGUIPlugin plugin) {

@@ -8,6 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class NPCInteractListener implements Listener {
 
@@ -17,22 +19,41 @@ public class NPCInteractListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onNPCInteract(NPCInteractEvent event) {
         Player player = event.getPlayer();
         int npcId = event.getNpcId();
 
         for (String guiId : plugin.getGuiRegistry().getGuiIds()) {
             GuiDefinition definition = plugin.getGuiRegistry().getGui(guiId);
-            if (definition == null) continue;
 
-            if (definition.getNpcId() != null && definition.getNpcId().intValue() == npcId) {
-                definition.createInventory(plugin.getInventoryManager(), plugin).open(player);
+            if (definition == null) {
+                continue;
+            }
 
+            if (definition.hasNpcBinding() && definition.isNpcBound(npcId)) {
                 event.setCancelled(true);
 
-                plugin.getLogger().info("Opened GUI '" + guiId + "' for player " +
-                        player.getName() + " via NPC " + npcId);
+                try {
+                    definition.createInventory(plugin.getInventoryManager(), plugin).open(player);
+
+                    Map<String, String> replacements = new HashMap<>();
+                    replacements.put("gui", guiId);
+                    replacements.put("id", String.valueOf(npcId));
+
+                    plugin.getMessageManager().send(player, "npc.gui_opened", replacements);
+
+                    Map<String, String> consoleReplacements = new HashMap<>();
+                    consoleReplacements.put("player", player.getName());
+                    consoleReplacements.put("gui", guiId);
+                    consoleReplacements.put("id", String.valueOf(npcId));
+                    plugin.getLogger().info(plugin.getMessageManager().getMessage("npc.interaction_logged", consoleReplacements));
+
+                } catch (Exception e) {
+                    plugin.getLogger().severe("Failed to open GUI '" + guiId + "' for NPC " + npcId + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+
                 return;
             }
         }
