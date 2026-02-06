@@ -3,9 +3,11 @@ package com.ogui.condition.impl;
 import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorldGuardRegionCondition implements Condition {
     private final OGUIPlugin plugin;
@@ -57,7 +59,9 @@ public class WorldGuardRegionCondition implements Condition {
             }
             return false;
         } catch (Exception e) {
-            plugin.getLogger().warning("WorldGuard check failed: " + e.getMessage());
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("error", e.getMessage());
+            plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.worldguard_check_failed", replacements));
             return false;
         }
     }
@@ -69,9 +73,14 @@ public class WorldGuardRegionCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        return ColorUtil.color(requireMember ?
-                "&cYou must be a member of region: &f" + regionId :
-                "&cYou must be in region: &f" + regionId);
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("region", regionId);
+
+        if (requireMember) {
+            return plugin.getMessageManager().getMessage("conditions.worldguard_region.not_member", player, replacements);
+        } else {
+            return plugin.getMessageManager().getMessage("conditions.worldguard_region.not_in_region", player, replacements);
+        }
     }
 
     @Override

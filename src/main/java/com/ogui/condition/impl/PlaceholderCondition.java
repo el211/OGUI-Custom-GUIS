@@ -3,24 +3,26 @@ package com.ogui.condition.impl;
 import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlaceholderCondition implements Condition {
     private final OGUIPlugin plugin;
     private final String placeholder;
     private final String operator;
     private final String value;
-    private final String errorMessage;
+    private final String customErrorMessage;
 
     public PlaceholderCondition(OGUIPlugin plugin, String placeholder, String operator,
-                                String value, String errorMessage) {
+                                String value, String customErrorMessage) {
         this.plugin = plugin;
         this.placeholder = placeholder;
         this.operator = operator;
         this.value = value;
-        this.errorMessage = errorMessage;
+        this.customErrorMessage = customErrorMessage;
     }
 
     @Override
@@ -45,20 +47,28 @@ public class PlaceholderCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        if (errorMessage != null && !errorMessage.isEmpty()) {
-            String parsed = errorMessage;
+        if (customErrorMessage != null && !customErrorMessage.isEmpty()) {
+            String message = customErrorMessage;
+
             if (isAvailable()) {
                 try {
                     Class<?> papiClass = Class.forName("me.clip.placeholderapi.PlaceholderAPI");
-                    parsed = (String) papiClass.getMethod("setPlaceholders", Player.class, String.class)
-                            .invoke(null, player, parsed);
+                    message = (String) papiClass.getMethod("setPlaceholders", Player.class, String.class)
+                            .invoke(null, player, message);
                 } catch (Exception e) {
-                    // Use unparsed message
                 }
             }
-            return ColorUtil.color(parsed);
+
+            return com.ogui.util.ColorUtil.color(message);
         }
-        return ColorUtil.color("&cCondition not met: &f" + placeholder + " " + operator + " " + value);
+
+        // Use default message from lang.yml
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("placeholder", placeholder);
+        replacements.put("operator", operator);
+        replacements.put("value", value);
+
+        return plugin.getMessageManager().getMessage("conditions.placeholder.condition_not_met", player, replacements);
     }
 
     @Override

@@ -6,9 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-/**
- * Default item provider supporting vanilla, ItemsAdder, and Nexo items
- */
+
 public class DefaultItemProvider implements ItemProvider {
 
     private final OGUIPlugin plugin;
@@ -43,9 +41,7 @@ public class DefaultItemProvider implements ItemProvider {
         return false;
     }
 
-    /**
-     * Get vanilla Minecraft item
-     */
+
     private ItemStack getVanillaItem(String materialName, Integer customModelData) {
         Material mat = Material.matchMaterial(materialName);
         if (mat == null) {
@@ -66,9 +62,7 @@ public class DefaultItemProvider implements ItemProvider {
         return item;
     }
 
-    /**
-     * Get ItemsAdder custom item
-     */
+
     private ItemStack getItemsAdderItem(String itemId) {
         if (!isAvailable("itemsadder")) {
             plugin.getLogger().warning("ItemsAdder is not available!");
@@ -76,7 +70,6 @@ public class DefaultItemProvider implements ItemProvider {
         }
 
         try {
-            // ItemsAdder API
             Class<?> customStackClass = Class.forName("dev.lone.itemsadder.api.CustomStack");
             Object customStack = customStackClass.getMethod("getInstance", String.class).invoke(null, itemId);
 
@@ -93,9 +86,7 @@ public class DefaultItemProvider implements ItemProvider {
         }
     }
 
-    /**
-     * Get Nexo custom item
-     */
+
     private ItemStack getNexoItem(String itemId) {
         if (!isAvailable("nexo")) {
             plugin.getLogger().warning("Nexo is not available!");
@@ -103,7 +94,6 @@ public class DefaultItemProvider implements ItemProvider {
         }
 
         try {
-            // Nexo API
             Class<?> nexoItemsClass = Class.forName("com.nexomc.nexo.api.NexoItems");
             Object itemBuilder = nexoItemsClass.getMethod("itemFromId", String.class).invoke(null, itemId);
 

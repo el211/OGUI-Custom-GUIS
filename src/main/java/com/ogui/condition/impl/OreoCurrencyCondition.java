@@ -3,12 +3,14 @@ package com.ogui.condition.impl;
 import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import fr.elias.oreoEssentials.OreoEssentials;
 import fr.elias.oreoEssentials.modules.currency.Currency;
 import fr.elias.oreoEssentials.modules.currency.CurrencyService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class OreoCurrencyCondition implements Condition {
     private final OGUIPlugin plugin;
@@ -47,15 +49,29 @@ public class OreoCurrencyCondition implements Condition {
     @Override
     public String getErrorMessage(Player player) {
         CurrencyService service = getCurrencyService();
-        if (service == null) return ColorUtil.color("&cOreoEssentials not available!");
+
+        if (service == null) {
+            return plugin.getMessageManager().getMessage("conditions.oreo_currency.unavailable", player);
+        }
+
         Currency currency = service.getCurrency(currencyId);
-        if (currency == null) return ColorUtil.color("&cCurrency not found: " + currencyId);
+        if (currency == null) {
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("currency", currencyId);
+            return plugin.getMessageManager().getMessage("conditions.oreo_currency.currency_not_found", player, replacements);
+        }
+
         try {
             double balance = service.getBalance(player.getUniqueId(), currencyId).get();
-            return ColorUtil.color("&cInsufficient " + currency.getName() + "! Need: &f" +
-                    currency.format(amount) + " &c(You have: &f" + currency.format(balance) + "&c)");
+
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("currency", currency.getName());
+            replacements.put("amount", currency.format(amount));
+            replacements.put("balance", currency.format(balance));
+
+            return plugin.getMessageManager().getMessage("conditions.oreo_currency.insufficient", player, replacements);
         } catch (Exception e) {
-            return ColorUtil.color("&cFailed to check balance!");
+            return plugin.getMessageManager().getMessage("conditions.oreo_currency.failed_check", player);
         }
     }
 

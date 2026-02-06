@@ -803,198 +803,108 @@ guis:
             error_message: "&cThis item is only for Notch!"
 
 
-  # ============================================
-  # EXAMPLE 13: ULTIMATE COMBO SHOP
-  # Everything combined!
-  # ============================================
+  # ================================
+  # Example 5: Combined Conditions
+  # ================================
   ultimate_shop:
-    title: "&5&l⚡ Ultimate Shop"
+    title: "<gradient:#FFD700:#FF4500>Ultimate Shop</gradient>"
     rows: 6
     commands:
-      - "ultimateshop"
-      - "ushop"
+      - "ultimate"
     items:
-      # Tier 1: Simple conditions
-      "10":
-        material: IRON_SWORD
-        name: "&7&lIron Tier"
-        lore:
-          - "&7Basic tier item"
-          - ""
-          - "&eRequires: &a$100"
-        commands:
-          - "give {player} iron_sword 1"
-        conditions:
-          - type: VAULT_MONEY
-            amount: 100
-
-      # Tier 2: Multiple currencies
-      "11":
-        material: DIAMOND_SWORD
-        name: "&b&lDiamond Tier"
-        lore:
-          - "&7Advanced tier item"
-          - ""
-          - "&eRequires:"
-          - "&7- $500"
-          - "&7- 250 Gems"
-        commands:
-          - "give {player} diamond_sword 1"
-          - "enchant {player} sharpness 3"
-        conditions:
-          - type: VAULT_MONEY
-            amount: 500
-          - type: OREO_CURRENCY
-            currency: gems
-            amount: 250
-
-      # Tier 3: Currency + Items
-      "12":
-        material: NETHERITE_SWORD
-        name: "&5&lNetherite Tier"
-        lore:
-          - "&7Elite tier item"
-          - ""
-          - "&eRequires:"
-          - "&7- 1000 Gems"
-          - "&7- 5 Diamonds"
-        commands:
-          - "give {player} netherite_sword 1"
-          - "enchant {player} sharpness 5"
-        conditions:
-          - type: OREO_CURRENCY
-            currency: gems
-            amount: 1000
-          - type: ITEM
-            material: DIAMOND
-            amount: 5
-
-      # Tier 4: Everything!
-      "13":
+      # Ultimate item with EVERYTHING
+      22:
         material: NETHER_STAR
-        name: "&d&l&k|||&r &5&lGODLY TIER &d&k|||"
+        item_type: vanilla
+        name: "<gradient:#FF0000:#FFD700>&#9400D3Ultimate Item</gradient>"
         lore:
-          - "&7The ultimate item"
+          - "<gradient:#00FF00:#00FFFF>The most exclusive item!</gradient>"
           - ""
-          - "&eRequires ALL of the following:"
-          - "&7- $10,000 (Vault)"
-          - "&7- 5,000 Gems"
-          - "&7- 1,000 Tokens"
-          - "&7- 10 Diamonds"
-          - "&7- Level 100"
-          - "&7- 5000 XP Points"
-          - "&7- VIP Rank"
-          - "&7- Be in premium region"
-          - "&7- Balance >= $50,000"
+          - "&7Requirements:"
+          - "  &f✦ $10,000 money"
+          - "  &f✦ 1000 OreoCoins"
+          - "  &f✦ Level 50"
+          - "  &f✦ Must be in 'world'"
+          - "  &f✦ Clear weather only"
+          - "  &f✦ VIP warp access"
+          - "  &f✦ VIP permission"
+          - "  &f✦ 10x Diamonds"
+          - ""
+          - "&#FF0000&lClick to purchase!"
         commands:
           - "give {player} nether_star 1"
-          - "give {player} diamond_block 64"
-          - "give {player} netherite_block 16"
-          - "broadcast &5&l{player} &dobtained the &5&lGODLY TIER &ditem!"
+          - "broadcast <gradient:#FF0000:#FFD700>{player} bought the Ultimate Item!</gradient>"
         close: true
         conditions:
+          # Money
           - type: VAULT_MONEY
-            amount: 10000
+            amount: 10000.0
+
+          # Custom currency (OreoEssentials)
           - type: OREO_CURRENCY
-            currency: gems
-            amount: 5000
-          - type: OREO_CURRENCY
-            currency: tokens
-            amount: 1000
+            currency: "oreo_coins"
+            amount: 1000.0
+
+          # XP Level
+          - type: XP_LEVEL
+            amount: 50
+
+          # World restriction
+          - type: WORLD
+            world: world
+
+          # Weather requirement
+          - type: WEATHER
+            weather: clear
+
+          # Warp permission
+          - type: OREO_WARPS
+            warp: vip
+            check_exists: true
+            check_permission: true
+
+          # Regular permission
+          - type: PERMISSION
+            permission: shop.vip
+
+          # Item cost
           - type: ITEM
             material: DIAMOND
             amount: 10
-          - type: XP_LEVEL
-            amount: 100
-          - type: XP_POINTS
-            amount: 5000
-          - type: PERMISSION
-            permission: rank.vip
-          - type: WORLDGUARD_REGION
-            region: premium-area
-            require_member: true
-          - type: PLACEHOLDER
-            placeholder: "%vault_eco_balance%"
-            operator: ">="
-            value: "50000"
 
-      # ItemsAdder special
-      "20":
-        material: ruby
+      # ItemsAdder custom item with gradient
+      20:
+        material: STICK
         item_type: itemsadder
-        item_id: ruby
-        name: "&c&lRuby Package"
+        item_id: "custom:magic_wand"
+        name: "<gradient:#9400D3:#FF69B4>Magic Wand</gradient>"
         lore:
-          - "&7ItemsAdder custom item"
-          - ""
-          - "&eRequires: &a$2000"
-        commands:
-          - "ia give {player} ruby 5"
+          - "&#FF69B4Custom ItemsAdder item"
+          - "&7with gradient name!"
         conditions:
-          - type: VAULT_MONEY
-            amount: 2000
-
-      # Nexo special
-      "21":
-        material: sapphire
-        item_type: nexo
-        item_id: sapphire
-        name: "&9&lSapphire Package"
-        lore:
-          - "&7Nexo custom item"
-          - ""
-          - "&eRequires: &d500 Gems"
+          - type: ITEMSADDER
+            item_id: "custom:ruby"
+            amount: 5
         commands:
-          - "nexo give {player} sapphire 5"
-        conditions:
-          - type: OREO_CURRENCY
-            currency: gems
-            amount: 500
-
-      # Custom model data
-      "22":
-        material: DIAMOND
-        custom_model_data: 9999
-        name: "&b&lMystic Crystal"
-        lore:
-          - "&7Custom textured item"
-          - ""
-          - "&eRequires: &710 Levels"
-        commands:
-          - "give {player} diamond{CustomModelData:9999} 1"
-        conditions:
-          - type: XP_LEVEL
-            amount: 10
-
-      # Info item (no conditions)
-      "40":
-        material: BOOK
-        name: "&e&lShop Information"
-        lore:
-          - "&7This shop demonstrates"
-          - "&7ALL condition types!"
-          - ""
-          - "&aVault Money"
-          - "&dOreoEssentials Currencies"
-          - "&aXP Levels & Points"
-          - "&eVanilla Items"
-          - "&cItemsAdder Items"
-          - "&9Nexo Items"
-          - "&6Permissions"
-          - "&2WorldGuard Regions"
-          - "&ePlaceholderAPI"
-          - ""
-          - "&7And combinations of all!"
-        close: false
-
-      # Close button
-      "49":
-        material: BARRIER
-        name: "&c&lClose Shop"
-        lore:
-          - "&7Click to close"
+          - "give {player} custom:magic_wand 1"
         close: true
 
+      # Nexo custom item
+      24:
+        material: DIAMOND_SWORD
+        item_type: nexo
+        item_id: "legendary_sword"
+        name: "&#FFD700Legendary &#FF4500Sword"
+        lore:
+          - "&7Custom Nexo item"
+          - "&#00FFFFWith hex colors!"
+        conditions:
+          - type: NEXO
+            item_id: "crystal_shard"
+            amount: 10
+        commands:
+          - "give {player} nexo:legendary_sword 1"
+        close: true
 
   # ============================================
   # EXAMPLE 14: LEGACY BACKWARDS COMPATIBILITY
@@ -1316,3 +1226,1087 @@ guis:
         material: BARRIER
         name: "&cClose"
         close: true
+  color_demo:
+    title: "<gradient:#FF0000:#0000FF>Rainbow Shop</gradient>"
+    rows: 3
+    commands:
+      - "colors"
+      - "colordemo"
+    items:
+      10:
+        material: DIAMOND
+        item_type: vanilla
+        name: "&#FF6B6BLegacy & Hex Colors"
+        lore:
+          - "&7This uses legacy colors: &c&lRED &6&lORANGE &e&lYELLOW"
+          - "&#00FF00And hex colors: &#FF0000R&#FF7F00A&#FFFF00I&#00FF00N&#0000FFB&#8B00FFW"
+          - ""
+          - "&7Click to see gradient demo!"
+        commands:
+          - "say <gradient:#FF0000:#0000FF>This is a beautiful gradient!</gradient>"
+        close: true
+
+      12:
+        material: EMERALD
+        name: "<gradient:#00FF00:#FFFF00>Gradient Title</gradient>"
+        lore:
+          - "&7Gradients work in lore too!"
+          - "<gradient:#FF1493:#00BFFF>Pink to Blue</gradient>"
+          - "<gradient:#FFD700:#FF4500>Gold to Orange</gradient>"
+        close: false
+
+      14:
+        material: NETHER_STAR
+        name: "&#9400D3Mixed &#FF1493Hex &#00CED1Colors"
+        lore:
+          - "&eLegacy yellow"
+          - "&#FF69B4Hex pink"
+          - "<gradient:#FF0000:#FFFF00>Fire gradient</gradient>"
+          - "&b&lCombined styles!"
+        close: false
+
+  # ================================
+  # Example 2: Weather Shop
+  # ================================
+  weather_shop:
+    title: "&6&lWeather-Based Shop"
+    rows: 3
+    commands:
+      - "weathershop"
+    items:
+      # Rain-only item
+      10:
+        material: WATER_BUCKET
+        name: "&b&lRainy Day Item"
+        lore:
+          - "&7Only available during rain!"
+          - ""
+          - "&ePrice: &f1000 coins"
+        commands:
+          - "give {player} water_bucket 64"
+        close: true
+        conditions:
+          - type: WEATHER
+            weather: rain
+          - type: VAULT_MONEY
+            amount: 1000
+
+      # Clear weather item
+      12:
+        material: SUNFLOWER
+        name: "&e&lSunny Day Item"
+        lore:
+          - "&7Only available in clear weather!"
+          - ""
+          - "&ePrice: &f500 coins"
+        commands:
+          - "give {player} sunflower 32"
+        close: true
+        conditions:
+          - type: WEATHER
+            weather: clear
+          - type: VAULT_MONEY
+            amount: 500
+
+      # Thunder item
+      14:
+        material: TRIDENT
+        name: "&9&lStorm Item"
+        lore:
+          - "&7Only available during thunderstorms!"
+          - ""
+          - "&ePrice: &f2000 coins"
+        commands:
+          - "give {player} trident 1"
+        close: true
+        conditions:
+          - type: WEATHER
+            weather: thunder
+          - type: VAULT_MONEY
+            amount: 2000
+
+  # ================================
+  # Example 3: World-Specific Shop
+  # ================================
+  world_shop:
+    title: "&c&lWorld-Specific Items"
+    rows: 4
+    commands:
+      - "worldshop"
+    items:
+      # Overworld only
+      10:
+        material: GRASS_BLOCK
+        name: "&a&lOverworld Item"
+        lore:
+          - "&7Only usable in the overworld!"
+          - ""
+          - "&7Allowed worlds:"
+          - "&f- world"
+          - "&f- lobby"
+        commands:
+          - "give {player} diamond 10"
+        close: true
+        conditions:
+          - type: WORLD
+            worlds:
+              - world
+              - lobby
+
+      # Nether only
+      12:
+        material: NETHERITE_INGOT
+        name: "&c&lNether Item"
+        lore:
+          - "&7Only usable in the nether!"
+        commands:
+          - "give {player} netherite_scrap 5"
+        close: true
+        conditions:
+          - type: WORLD
+            world: world_nether
+
+      # End only
+      14:
+        material: ENDER_PEARL
+        name: "&d&lEnd Item"
+        lore:
+          - "&7Only usable in the end!"
+        commands:
+          - "give {player} elytra 1"
+        close: true
+        conditions:
+          - type: WORLD
+            worlds:
+              - world_the_end
+
+      # Blacklist example (everywhere EXCEPT spawn)
+      16:
+        material: TNT
+        name: "&c&lDangerous Item"
+        lore:
+          - "&7Cannot be used in spawn!"
+          - ""
+          - "&7Blacklisted worlds:"
+          - "&f- spawn"
+          - "&f- lobby"
+        commands:
+          - "give {player} tnt 64"
+        close: true
+        conditions:
+          - type: WORLD
+            blacklist: true
+            worlds:
+              - spawn
+              - lobby
+
+  # ================================
+  # Example 4: OreoEssentials Warps
+  # ================================
+  warp_shop:
+    title: "&5&lWarp-Based Shop"
+    rows: 3
+    commands:
+      - "warpshop"
+    items:
+      # Item that requires a specific warp to exist
+      10:
+        material: ENDER_PEARL
+        name: "&d&lVIP Teleport Kit"
+        lore:
+          - "&7Requires VIP warp to be set up!"
+          - ""
+          - "&eReward: &fTeleport items"
+        commands:
+          - "give {player} ender_pearl 16"
+        close: true
+        conditions:
+          - type: OREO_WARPS
+            warp: vip
+            check_exists: true
+            check_permission: false
+
+      # Item that checks if player has permission to use warp
+      12:
+        material: DIAMOND
+        name: "&b&lDonator Zone Access"
+        lore:
+          - "&7Requires permission to use 'donator' warp!"
+          - ""
+          - "&eReward: &fDiamond kit"
+        commands:
+          - "give {player} diamond 32"
+        close: true
+        conditions:
+          - type: OREO_WARPS
+            warp: donator
+            check_exists: true
+            check_permission: true
+
+      # Item checking warp existence only
+      14:
+        material: COMPASS
+        name: "&e&lSpawn Point Info"
+        lore:
+          - "&7Shows if spawn warp exists"
+          - ""
+          - "&7This just checks existence!"
+        commands:
+          - "say Spawn warp is available!"
+        close: false
+        conditions:
+          - type: OREO_WARPS
+            warp: spawn
+            check_exists: true
+            check_permission: false
+
+
+  # ================================
+  # Example 6: PlaceholderAPI + Weather
+  # ================================
+  advanced_conditions:
+    title: "&6&lAdvanced Conditions"
+    rows: 3
+    commands:
+      - "advanced"
+    items:
+      10:
+        material: PLAYER_HEAD
+        name: "&#00FFFFKill-Based Item"
+        lore:
+          - "&7Requires 100 kills!"
+          - "&7Must be raining"
+          - ""
+          - "&7Your kills: &f%statistic_player_kills%"
+        conditions:
+          - type: PLACEHOLDER
+            placeholder: "%statistic_player_kills%"
+            operator: ">="
+            value: "100"
+            error_message: "&cYou need at least 100 kills! (You have: %statistic_player_kills%)"
+          - type: WEATHER
+            weather: rain
+        commands:
+          - "give {player} diamond_sword 1"
+        close: true
+
+      12:
+        material: GOLD_INGOT
+        name: "&#FFD700Playtime Reward"
+        lore:
+          - "&7Requires 10+ hours playtime"
+          - "&7Must be in overworld"
+          - ""
+          - "&7Your playtime: &f%statistic_hours_played%h"
+        conditions:
+          - type: PLACEHOLDER
+            placeholder: "%statistic_hours_played%"
+            operator: ">="
+            value: "10"
+          - type: WORLD
+            world: world
+        commands:
+          - "eco give {player} 5000"
+        close: true
+
+      14:
+        material: DIAMOND
+        name: "&#00FFFFRegion Member Bonus"
+        lore:
+          - "&7Must be member of 'shop' region"
+          - "&7Weather must be clear"
+        conditions:
+          - type: WORLDGUARD_REGION
+            region: shop
+            require_member: true
+          - type: WEATHER
+            weather: clear
+        commands:
+          - "give {player} diamond 10"
+        close: true
+  # ================================
+  # Example 1: NPC Opens GUI on Click
+  # ================================
+  # When player clicks NPC ID 1, this GUI opens
+  blacksmith_shop:
+    title: "<gradient:#FF4500:#FFD700>⚒ Blacksmith Shop ⚒</gradient>"
+    rows: 4
+    npc_id: 1  # THIS NPC WILL OPEN THIS GUI WHEN CLICKED
+    items:
+
+      10:
+        material: DIAMOND_SWORD
+        name: "&#FF0000&lFlaming Sword"
+        lore:
+          - "&7A sword forged in dragon fire!"
+          - ""
+          - "&#FF1493Cost: &f$5,000"
+          - ""
+          - "&eClick to purchase!"
+        commands:
+          - "give {player} diamond_sword{Enchantments:[{id:\"minecraft:fire_aspect\",lvl:2},{id:\"minecraft:sharpness\",lvl:5}],display:{Name:'{\"text\":\"Flaming Sword\",\"color\":\"red\"}'}} 1"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 5000.0
+
+      11:
+        material: DIAMOND_HELMET
+        name: "&#00FFFFDiamond Armor Set"
+        lore:
+          - "&7Full protection IV armor!"
+          - ""
+          - "&#FF1493Cost: &f$10,000"
+        commands:
+          - "give {player} diamond_helmet{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
+          - "give {player} diamond_chestplate{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
+          - "give {player} diamond_leggings{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
+          - "give {player} diamond_boots{Enchantments:[{id:\"minecraft:protection\",lvl:4}]} 1"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 10000.0
+
+      13:
+        material: ANVIL
+        name: "&#FFD700&lRepair Service"
+        lore:
+          - "&7Repair your equipment!"
+          - ""
+          - "&#FF1493Cost: &f$500"
+        commands:
+          - "repair hand"
+          - "tellraw {player} {\"text\":\"Item repaired!\",\"color\":\"gold\"}"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 500.0
+
+      22:
+        material: BOOK
+        name: "&#9400D3&lTalk to Blacksmith"
+        lore:
+          - "&7Start a conversation"
+          - ""
+          - "&eClick to talk!"
+        commands:
+          - "npc:dialog 1"  # Opens ModeledNPCs dialogue for NPC ID 1
+        close: true
+
+  # ================================
+  # Example 2: Trader NPC
+  # ================================
+  merchant_shop:
+    title: "<gradient:#00FF00:#FFD700>🏪 Merchant 🏪</gradient>"
+    rows: 5
+    npc_id: 2  # Merchant NPC opens this GUI
+    items:
+
+      10:
+        material: EMERALD
+        name: "&#00FF00&lEmerald Package"
+        lore:
+          - "&7Stack of emeralds"
+          - ""
+          - "&#FF1493Cost: &f$1,000"
+        commands:
+          - "give {player} emerald 64"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 1000.0
+
+      11:
+        material: DIAMOND
+        name: "&#00FFFF&lDiamond Package"
+        lore:
+          - "&7Stack of diamonds"
+          - ""
+          - "&#FF1493Cost: &f$5,000"
+        commands:
+          - "give {player} diamond 64"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 5000.0
+
+      12:
+        material: GOLD_INGOT
+        name: "&#FFD700&lGold Package"
+        lore:
+          - "&7Stack of gold"
+          - ""
+          - "&#FF1493Cost: &f$500"
+        commands:
+          - "give {player} gold_ingot 64"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 500.0
+
+      19:
+        material: ENDER_PEARL
+        name: "&#9400D3&lTeleport Scrolls"
+        lore:
+          - "&7Ender pearls for travel"
+          - ""
+          - "&#FF1493Cost: &f$2,000"
+        commands:
+          - "give {player} ender_pearl 16"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 2000.0
+
+      31:
+        material: ENCHANTED_BOOK
+        name: "&#FF1493&lStart Quest"
+        lore:
+          - "&7Begin the merchant's quest"
+          - ""
+          - "&eClick to accept!"
+        commands:
+          - "npc:quest merchant_quest"  # Assigns quest via ModeledNPCs
+        close: true
+
+  # ================================
+  # Example 3: VIP NPC with Permissions
+  # ================================
+  vip_npc_shop:
+    title: "<gradient:#9400D3:#FF1493>👑 VIP Lounge 👑</gradient>"
+    rows: 3
+    npc_id: 3  # VIP NPC
+    items:
+
+      10:
+        material: NETHER_STAR
+        name: "<gradient:#FFD700:#FF8C00>VIP Daily Bonus</gradient>"
+        lore:
+          - "&#9400D3Exclusive VIP reward!"
+          - ""
+          - "&#FF1493Requirements:"
+          - "  &f✦ VIP Permission"
+          - "  &f✦ Near VIP NPC"
+          - ""
+          - "&eClick to claim!"
+        commands:
+          - "eco give {player} 10000"
+          - "give {player} nether_star 1"
+          - "broadcast <gradient:#9400D3:#FF1493>{player} claimed VIP bonus!</gradient>"
+        close: true
+        conditions:
+          - type: PERMISSION
+            permission: "vip.access"
+          - type: MODELED_NPC
+            npc_id: 3
+            radius: 5.0
+
+      13:
+        material: PLAYER_HEAD
+        name: "&#00FFFF&lTalk to VIP Manager"
+        lore:
+          - "&7Start VIP dialogue"
+        commands:
+          - "npc:dialog 3"
+        close: true
+
+  # ================================
+  # Example 4: Location-Based NPC Shop
+  # ================================
+  arena_master:
+    title: "&c&l⚔ Arena Master ⚔"
+    rows: 4
+    npc_id: 4  # Arena Master NPC
+    items:
+
+      # Must be NEAR the NPC to purchase
+      10:
+        material: DIAMOND_SWORD
+        name: "&c&lPvP Kit"
+        lore:
+          - "&7Get combat gear!"
+          - ""
+          - "&#FF1493Requirements:"
+          - "  &f✦ $5,000"
+          - "  &f✦ Near Arena Master"
+          - ""
+          - "&eClick to buy!"
+        commands:
+          - "give {player} diamond_sword 1"
+          - "give {player} diamond_helmet 1"
+          - "give {player} diamond_chestplate 1"
+          - "give {player} diamond_leggings 1"
+          - "give {player} diamond_boots 1"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 5000.0
+          - type: MODELED_NPC
+            npc_id: 4
+            radius: 10.0  # Must be within 10 blocks
+
+      11:
+        material: GOLDEN_APPLE
+        name: "&6&lHealing Kit"
+        lore:
+          - "&7Potions and food"
+          - ""
+          - "&#FF1493Requirements:"
+          - "  &f✦ $2,000"
+          - "  &f✦ Near Arena Master"
+        commands:
+          - "give {player} golden_apple 16"
+          - "give {player} potion{Potion:\"minecraft:strong_healing\"} 5"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 2000.0
+          - type: MODELED_NPC
+            npc_id: 4
+            radius: 10.0
+
+      13:
+        material: ENDER_PEARL
+        name: "&d&lJoin Tournament"
+        lore:
+          - "&7Enter the PvP tournament"
+          - ""
+          - "&#FF1493Cost: &f$10,000 entry"
+        commands:
+          - "tournament join {player}"
+        close: true
+        conditions:
+          - type: VAULT_MONEY
+            amount: 10000.0
+          - type: MODELED_NPC
+            npc_id: 4
+            radius: 15.0
+
+      22:
+        material: BOOK
+        name: "&e&lArena Rules"
+        lore:
+          - "&7Talk to Arena Master"
+        commands:
+          - "npc:dialog 4"
+        close: false
+
+  # ================================
+  # Example 5: Quest Giver NPC
+  # ================================
+  quest_npc:
+    title: "&#FFD700&l📜 Quest Board 📜"
+    rows: 3
+    npc_id: 5  # Quest Giver NPC
+    items:
+
+      10:
+        material: PAPER
+        name: "&#00FF00&lBeginner Quest"
+        lore:
+          - "&7Collect 10 wood logs"
+          - ""
+          - "&aReward: &f$500"
+          - ""
+          - "&eClick to accept!"
+        commands:
+          - "npc:quest beginner_quest"
+        close: true
+
+      11:
+        material: IRON_SWORD
+        name: "&#00FFFF&lIntermediate Quest"
+        lore:
+          - "&7Defeat 20 zombies"
+          - ""
+          - "&aReward: &f$2,000"
+          - ""
+          - "&#FF1493Requires: &fLevel 10+"
+        commands:
+          - "npc:quest intermediate_quest"
+        close: true
+        conditions:
+          - type: XP_LEVEL
+            amount: 10
+
+      12:
+        material: DIAMOND_SWORD
+        name: "&#FF0000&lAdvanced Quest"
+        lore:
+          - "&7Slay the dragon"
+          - ""
+          - "&aReward: &f$50,000"
+          - ""
+          - "&#FF1493Requires:"
+          - "  &f✦ Level 50+"
+          - "  &f✦ $10,000 deposit"
+        commands:
+          - "npc:quest advanced_quest"
+        close: true
+        conditions:
+          - type: XP_LEVEL
+            amount: 50
+          - type: VAULT_MONEY
+            amount: 10000.0
+
+      16:
+        material: ENCHANTED_BOOK
+        name: "&#9400D3&lView My Quests"
+        lore:
+          - "&7Check active quests"
+        commands:
+          - "quests"
+        close: false
+
+  # ================================
+  # Example 6: Multi-NPC Shop System
+  # ================================
+  general_npc_shop:
+    title: "&6&lNPC Interaction Menu"
+    rows: 3
+    # NO npc_id = Opens via /shop command
+    # But items require being near specific NPCs
+    items:
+
+      # Blacksmith items (must be near NPC 1)
+      10:
+        material: ANVIL
+        name: "&c&lBlacksmith Services"
+        lore:
+          - "&7Must be near Blacksmith"
+          - "&7NPC ID: 1"
+          - ""
+          - "&eClick for options!"
+        commands:
+          - "opengui blacksmith_shop {player}"
+        close: false
+        conditions:
+          - type: MODELED_NPC
+            npc_id: 1
+            radius: 10.0
+
+      # Merchant items (must be near NPC 2)
+      12:
+        material: EMERALD
+        name: "&a&lMerchant Trades"
+        lore:
+          - "&7Must be near Merchant"
+          - "&7NPC ID: 2"
+        commands:
+          - "opengui merchant_shop {player}"
+        close: false
+        conditions:
+          - type: MODELED_NPC
+            npc_id: 2
+            radius: 10.0
+
+      # VIP NPC (must be near NPC 3 AND have permission)
+      14:
+        material: NETHER_STAR
+        name: "&#9400D3&lVIP Services"
+        lore:
+          - "&7Must be near VIP NPC"
+          - "&7AND have VIP permission"
+        commands:
+          - "opengui vip_npc_shop {player}"
+        close: false
+        conditions:
+          - type: MODELED_NPC
+            npc_id: 3
+            radius: 10.0
+          - type: PERMISSION
+            permission: "vip.access"
+
+      # Arena Master
+      16:
+        material: DIAMOND_SWORD
+        name: "&c&lArena Master"
+        lore:
+          - "&7Must be at arena"
+        commands:
+          - "opengui arena_master {player}"
+        close: false
+        conditions:
+          - type: MODELED_NPC
+            npc_id: 4
+            radius: 15.0
+  # ================================
+  # Example 1: Default Settings
+  # ================================
+  spawn_voting:
+    title: "&a&l🗳 Vote Rewards 🗳"
+    rows: 3
+    items:
+
+      # Default: 5 block radius, default error message
+      10:
+        material: EMERALD
+        name: "&a&lDaily Vote Reward"
+        lore:
+          - "&7Vote for the server!"
+          - ""
+          - "&7Must be at spawn warp"
+          - "&7(Within 5 blocks)"
+          - ""
+          - "&aReward: &f$1,000 + 100 Coins"
+          - "&eClick to claim!"
+        commands:
+          - "eco give {player} 1000"
+          - "oreo currency add {player} vote_coins 100"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            # radius: 5.0 (default)
+            # No error_message = uses default
+
+  # ================================
+  # Example 2: Custom Radius
+  # ================================
+  spawn_shop:
+    title: "&6&l🏪 Spawn Shop 🏪"
+    rows: 3
+    items:
+
+      # Small radius (exact location)
+      10:
+        material: DIAMOND
+        name: "&b&lPrecision Item"
+        lore:
+          - "&7Must be very close to spawn!"
+          - "&7Within 3 blocks only"
+        commands:
+          - "give {player} diamond 10"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 3.0  # Very close!
+
+      # Medium radius (normal)
+      11:
+        material: GOLD_INGOT
+        name: "&e&lNormal Item"
+        lore:
+          - "&7Must be at spawn area"
+          - "&7Within 10 blocks"
+        commands:
+          - "give {player} gold_ingot 32"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 10.0  # Generous radius
+
+      # Large radius (entire area)
+      12:
+        material: IRON_INGOT
+        name: "&7&lFlexible Item"
+        lore:
+          - "&7Just be in spawn area"
+          - "&7Within 20 blocks"
+        commands:
+          - "give {player} iron_ingot 64"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 20.0  # Very generous!
+
+  # ================================
+  # Example 3: Custom Error Messages
+  # ================================
+  custom_messages:
+    title: "&c&lCustom Messages Demo"
+    rows: 4
+    items:
+
+      # Simple custom message
+      10:
+        material: EMERALD
+        name: "&a&lSimple Custom Message"
+        lore:
+          - "&7Shows distance to warp"
+        commands:
+          - "give {player} emerald 10"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&c❌ You're too far! Get closer to spawn!"
+
+      # Detailed custom message with placeholders
+      11:
+        material: DIAMOND
+        name: "&b&lDetailed Message"
+        lore:
+          - "&7Shows exact distance and requirement"
+        commands:
+          - "give {player} diamond 5"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&c❌ Too far from {warp}! &7(Distance: &f{distance} &7blocks, Need: &f{radius} &7blocks)"
+
+      # Friendly custom message
+      12:
+        material: GOLD_INGOT
+        name: "&e&lFriendly Message"
+        lore:
+          - "&7Helpful and friendly"
+        commands:
+          - "give {player} gold_ingot 20"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 10.0
+            error_message: "&e💡 Tip: You need to be at &f{warp} &ewarp! Currently &f{distance} &eblocks away."
+
+      # Strict custom message
+      13:
+        material: NETHER_STAR
+        name: "&d&lStrict Message"
+        lore:
+          - "&7Very strict requirement"
+        commands:
+          - "give {player} nether_star 1"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 3.0
+            error_message: "&c&l⚠ ACCESS DENIED! &cMust be within {radius} blocks of {warp} warp!"
+
+      # Gradient custom message
+      19:
+        material: ENDER_PEARL
+        name: "<gradient:#FF0000:#FFD700>Gradient Message</gradient>"
+        lore:
+          - "&7Uses gradients in error"
+        commands:
+          - "give {player} ender_pearl 16"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "<gradient:#FF0000:#FFD700>⚠ You must be at {warp} warp!</gradient> &7({distance} blocks away)"
+
+  # ================================
+  # Example 4: Multiple Warps with Different Settings
+  # ================================
+  multi_warp_shop:
+    title: "&6&lMulti-Warp Shop"
+    rows: 5
+    items:
+
+      # Spawn warp - Generous
+      10:
+        material: GRASS_BLOCK
+        name: "&a&lSpawn Item"
+        lore:
+          - "&7Available at spawn"
+          - "&7Large radius: 15 blocks"
+        commands:
+          - "give {player} diamond 5"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 15.0
+            error_message: "&cGo to spawn warp to claim this! &7(You're {distance} blocks away)"
+
+      # Shop warp - Medium
+      11:
+        material: EMERALD
+        name: "&2&lShop Item"
+        lore:
+          - "&7Available at shop"
+          - "&7Medium radius: 10 blocks"
+        commands:
+          - "give {player} emerald 32"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: shop
+            radius: 10.0
+            error_message: "&cVisit the shop warp! Current distance: &f{distance} &cblocks"
+
+      # PvP warp - Strict
+      12:
+        material: DIAMOND_SWORD
+        name: "&c&lArena Item"
+        lore:
+          - "&7Available at PvP arena"
+          - "&7Small radius: 5 blocks"
+        commands:
+          - "give {player} diamond_sword 1"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: pvp
+            radius: 5.0
+            error_message: "&c&lMust be IN the arena! &7({distance} blocks from center, need {radius})"
+
+      # VIP warp - Exclusive
+      13:
+        material: NETHER_STAR
+        name: "&d&lVIP Exclusive"
+        lore:
+          - "&7VIP lounge only"
+          - "&7Strict: 3 blocks"
+        commands:
+          - "give {player} nether_star 1"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: vip
+            radius: 3.0
+            error_message: "&d&l✦ VIP LOUNGE ONLY! &7(Distance: {distance}, Required: {radius})"
+
+      # Mining warp - Very generous
+      19:
+        material: DIAMOND_PICKAXE
+        name: "&b&lMining Boost"
+        lore:
+          - "&7Mining world area"
+          - "&7Very large: 25 blocks"
+        commands:
+          - "effect give {player} haste 600 2"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: mining
+            radius: 25.0
+            error_message: "&bHead to the mining world! &7(Currently {distance} blocks from warp)"
+
+  # ================================
+  # Example 5: Combined Conditions
+  # ================================
+  advanced_warp_shop:
+    title: "&5&lAdvanced Warp Shop"
+    rows: 3
+    items:
+
+      # Location + Money
+      10:
+        material: DIAMOND
+        name: "&b&lSpawn Diamond Package"
+        lore:
+          - "&7Requirements:"
+          - "  &f✦ At spawn (within 10 blocks)"
+          - "  &f✦ $5,000"
+        commands:
+          - "give {player} diamond 64"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 10.0
+            error_message: "&c❌ Go to spawn first! &7(You're {distance} blocks away)"
+          - type: VAULT_MONEY
+            amount: 5000.0
+
+      # Location + Permission
+      11:
+        material: NETHER_STAR
+        name: "&d&lVIP Daily Bonus"
+        lore:
+          - "&7Requirements:"
+          - "  &f✦ At VIP warp (5 blocks)"
+          - "  &f✦ VIP permission"
+        commands:
+          - "eco give {player} 10000"
+          - "give {player} nether_star 1"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: vip
+            radius: 5.0
+            error_message: "&d❌ You must be IN the VIP lounge! &7({distance}m away)"
+          - type: PERMISSION
+            permission: "vip.access"
+
+      # Location + Weather + Money
+      12:
+        material: TRIDENT
+        name: "&9&lStorm Special"
+        lore:
+          - "&7Requirements:"
+          - "  &f✦ At spawn (15 blocks)"
+          - "  &f✦ Thunderstorm weather"
+          - "  &f✦ $20,000"
+        commands:
+          - "give {player} trident 1"
+        close: true
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 15.0
+            error_message: "&9⚡ Go to spawn during the storm! &7(Distance: {distance} blocks)"
+          - type: WEATHER
+            weather: thunder
+          - type: VAULT_MONEY
+            amount: 20000.0
+
+  # ================================
+  # Example 6: Different Error Styles
+  # ================================
+  error_styles:
+    title: "&c&lError Message Styles"
+    rows: 3
+    items:
+
+      # Minimalist
+      10:
+        material: STONE
+        name: "&7Minimalist"
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&cToo far from spawn."
+
+      # Detailed
+      11:
+        material: BOOK
+        name: "&eDetailed"
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&c⚠ Location Check Failed! &7You are currently &f{distance} &7blocks away from &f{warp} &7warp. You need to be within &f{radius} &7blocks to access this item."
+
+      # Emoji Style
+      12:
+        material: PAPER
+        name: "&aEmoji Style"
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&c❌ Too far! 📍 Get to &f{warp} &c({distance}m away 🚶)"
+
+      # Professional
+      13:
+        material: IRON_BLOCK
+        name: "&9Professional"
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&7[&cACCESS DENIED&7] Location requirement not met. Distance to {warp}: {distance} blocks (Required: {radius} blocks)"
+
+      # Casual/Friendly
+      14:
+        material: SUNFLOWER
+        name: "&6Friendly"
+        conditions:
+          - type: OREO_WARPS_LOCATION
+            warp: spawn
+            radius: 5.0
+            error_message: "&eHey! You need to be at &f{warp} &ewarp to get this. You're only &f{distance} &eblocks away, just head over there!"

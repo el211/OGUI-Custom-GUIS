@@ -5,13 +5,7 @@ import com.ogui.condition.Condition;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Represents an item in a GUI with enhanced features:
- * - Multiple condition types (OreoEssentials currency, XP, items, permissions, etc.)
- * - Custom item support (ItemsAdder, Nexo)
- * - Custom model data support
- * - Backwards compatible with legacy price/requirement system
- */
+
 public class GuiItem {
 
     private final int slot;
@@ -24,7 +18,6 @@ public class GuiItem {
     private final double price;
     private final String requirement;
 
-    // Enhanced fields
     private final List<Condition> conditions;
     private final String itemType;
     private final String itemId;
@@ -38,20 +31,7 @@ public class GuiItem {
                 Collections.emptyList(), "vanilla", null, null);
     }
 
-    /**
-     * @param slot Inventory slot (0-53)
-     * @param material Material name or fallback material
-     * @param name Display name of the item
-     * @param lore Lore lines (already colored)
-     * @param commands Commands to execute on click
-     * @param closeOnClick Whether to close GUI after click
-     * @param price Legacy Vault economy price (0 = no price)
-     * @param requirement Legacy permission requirement (null/empty = no requirement)
-     * @param conditions List of conditions to check (new system)
-     * @param itemType Type of item: "vanilla", "itemsadder", or "nexo"
-     * @param itemId Item ID for ItemsAdder/Nexo items
-     * @param customModelData Custom model data for vanilla items
-     */
+
     public GuiItem(int slot, String material, String name, List<String> lore, List<String> commands,
                    boolean closeOnClick, double price, String requirement, List<Condition> conditions,
                    String itemType, String itemId, Integer customModelData) {

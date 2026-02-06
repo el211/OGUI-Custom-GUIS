@@ -1,24 +1,28 @@
-// ========== FILE: condition/impl/ItemCondition.java ==========
 package com.ogui.condition.impl;
 
+import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ItemCondition implements Condition {
+    private final OGUIPlugin plugin;
     private final Material material;
     private final int amount;
     private final Integer customModelData;
 
-    public ItemCondition(Material material, int amount) {
-        this(material, amount, null);
+    public ItemCondition(OGUIPlugin plugin, Material material, int amount) {
+        this(plugin, material, amount, null);
     }
 
-    public ItemCondition(Material material, int amount, Integer customModelData) {
+    public ItemCondition(OGUIPlugin plugin, Material material, int amount, Integer customModelData) {
+        this.plugin = plugin;
         this.material = material;
         this.amount = amount;
         this.customModelData = customModelData;
@@ -58,9 +62,16 @@ public class ItemCondition implements Condition {
     public String getErrorMessage(Player player) {
         int has = countItems(player);
         String itemName = material.name().toLowerCase().replace("_", " ");
-        if (customModelData != null) itemName += " (CMD: " + customModelData + ")";
-        return ColorUtil.color("&cInsufficient items! Need: &f" + amount + "x " + itemName +
-                " &c(You have: &f" + has + "&c)");
+        if (customModelData != null) {
+            itemName += " (CMD: " + customModelData + ")";
+        }
+
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("amount", String.valueOf(amount));
+        replacements.put("item", itemName);
+        replacements.put("current", String.valueOf(has));
+
+        return plugin.getMessageManager().getMessage("conditions.item.insufficient", player, replacements);
     }
 
     @Override
@@ -82,4 +93,3 @@ public class ItemCondition implements Condition {
         return count;
     }
 }
-

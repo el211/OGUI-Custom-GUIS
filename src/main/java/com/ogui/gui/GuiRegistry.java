@@ -47,6 +47,10 @@ public class GuiRegistry {
                 GuiDefinition definition = loadGuiDefinition(id, guisSection.getConfigurationSection(id));
                 if (definition != null) {
                     definitions.put(id, definition);
+
+                    if (definition.hasNpcBinding()) {
+                        plugin.getLogger().info("GUI '" + id + "' bound to NPC ID: " + definition.getNpcId());
+                    }
                 }
             } catch (Exception e) {
                 plugin.getLogger().severe("Failed to load GUI '" + id + "': " + e.getMessage());
@@ -66,6 +70,8 @@ public class GuiRegistry {
         String title = guiSection.getString("title", id);
         int rows = Math.min(6, Math.max(1, guiSection.getInt("rows", 1)));
         List<String> guiCommands = guiSection.getStringList("commands");
+
+        Integer npcId = guiSection.isSet("npc_id") ? guiSection.getInt("npc_id") : null;
 
         Map<Integer, GuiItem> items = new LinkedHashMap<>();
         ConfigurationSection itemsSection = guiSection.getConfigurationSection("items");
@@ -90,7 +96,7 @@ public class GuiRegistry {
             }
         }
 
-        return new GuiDefinition(id, title, rows, items, guiCommands);
+        return new GuiDefinition(id, title, rows, items, guiCommands, npcId);
     }
 
 

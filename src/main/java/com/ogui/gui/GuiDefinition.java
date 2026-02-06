@@ -15,13 +15,20 @@ public class GuiDefinition {
     private final int rows;
     private final Map<Integer, GuiItem> items;
     private final List<String> commands;
+    private final Integer npcId;
 
+    @Deprecated
     public GuiDefinition(String id, String title, int rows, Map<Integer, GuiItem> items, List<String> commands) {
+        this(id, title, rows, items, commands, null);
+    }
+
+    public GuiDefinition(String id, String title, int rows, Map<Integer, GuiItem> items, List<String> commands, Integer npcId) {
         this.id = id;
         this.title = title;
         this.rows = rows;
         this.items = items;
         this.commands = commands != null ? commands : Collections.emptyList();
+        this.npcId = npcId;
     }
 
     public String getId() {
@@ -44,6 +51,14 @@ public class GuiDefinition {
         return Collections.unmodifiableList(commands);
     }
 
+
+    public Integer getNpcId() {
+        return npcId;
+    }
+
+    public boolean hasNpcBinding() {
+        return npcId != null;
+    }
 
     public SmartInventory createInventory(InventoryManager manager, OGUIPlugin plugin) {
         return SmartInventory.builder()

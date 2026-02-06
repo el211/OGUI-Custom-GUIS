@@ -1,14 +1,19 @@
 package com.ogui.condition.impl;
 
+import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class XpLevelCondition implements Condition {
+    private final OGUIPlugin plugin;
     private final int levels;
 
-    public XpLevelCondition(int levels) {
+    public XpLevelCondition(OGUIPlugin plugin, int levels) {
+        this.plugin = plugin;
         this.levels = levels;
     }
 
@@ -28,8 +33,11 @@ public class XpLevelCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        return ColorUtil.color("&cInsufficient XP levels! Need: &f" + levels +
-                " &c(You have: &f" + player.getLevel() + "&c)");
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("amount", String.valueOf(levels));
+        replacements.put("current", String.valueOf(player.getLevel()));
+
+        return plugin.getMessageManager().getMessage("conditions.xp_level.insufficient", player, replacements);
     }
 
     @Override

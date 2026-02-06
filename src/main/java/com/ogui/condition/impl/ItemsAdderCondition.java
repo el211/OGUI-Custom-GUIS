@@ -3,10 +3,12 @@ package com.ogui.condition.impl;
 import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemsAdderCondition implements Condition {
     private final OGUIPlugin plugin;
@@ -58,8 +60,16 @@ public class ItemsAdderCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        return ColorUtil.color("&cInsufficient items! Need: &f" + amount + "x " + itemId +
-                " &c(You have: &f" + countItems(player) + "&c)");
+        if (!isAvailable()) {
+            return plugin.getMessageManager().getMessage("conditions.itemsadder.unavailable", player);
+        }
+
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("amount", String.valueOf(amount));
+        replacements.put("item", itemId);
+        replacements.put("current", String.valueOf(countItems(player)));
+
+        return plugin.getMessageManager().getMessage("conditions.itemsadder.insufficient", player, replacements);
     }
 
     @Override

@@ -170,6 +170,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.el211</groupId>
+            <artifactId>ModeledNPCS-API</artifactId>
+            <version>7.7f</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>

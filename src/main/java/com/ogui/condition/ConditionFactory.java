@@ -4,9 +4,13 @@ import com.ogui.OGUIPlugin;
 import com.ogui.condition.impl.*;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 
 public class ConditionFactory {
     private final OGUIPlugin plugin;
@@ -14,6 +18,7 @@ public class ConditionFactory {
     public ConditionFactory(OGUIPlugin plugin) {
         this.plugin = plugin;
     }
+
 
     public List<Condition> parseConditions(ConfigurationSection section) {
         List<Condition> conditions = new ArrayList<>();
@@ -33,6 +38,7 @@ public class ConditionFactory {
         return conditions;
     }
 
+
     public Condition parseCondition(ConfigurationSection section) {
         String type = section.getString("type");
         if (type == null) return null;
@@ -41,7 +47,7 @@ public class ConditionFactory {
             switch (type.toUpperCase(Locale.ROOT)) {
                 case "VAULT_MONEY":
                 case "MONEY":
-                    return new VaultMoneyCondition(section.getDouble("amount", 0.0));
+                    return new VaultMoneyCondition(plugin, section.getDouble("amount", 0.0));
 
                 case "OREO_CURRENCY":
                 case "CURRENCY":
@@ -49,23 +55,51 @@ public class ConditionFactory {
                             section.getString("currency"),
                             section.getDouble("amount", 0.0));
 
+                case "OREO_WARPS":
+                case "OREO_WARP":
+                case "WARPS":
+                case "WARP":
+                    return new OreoWarpsCondition(plugin,
+                            section.getString("warp"),
+                            section.getBoolean("check_exists", true),
+                            section.getBoolean("check_permission", false));
+
+                case "OREO_WARPS_LOCATION":
+                case "OREO_WARP_LOCATION":
+                case "WARP_LOCATION":
+                case "AT_WARP":
+                    return new OreoWarpsLocationCondition(plugin,
+                            section.getString("warp"),
+                            section.getDouble("radius", 5.0),
+                            section.getString("error_message"));
+
                 case "XP_LEVEL":
                 case "LEVEL":
-                    return new XpLevelCondition(section.getInt("amount", 0));
+                    return new XpLevelCondition(plugin, section.getInt("amount", 0));
 
                 case "XP_POINTS":
                 case "XP":
-                    return new XpPointsCondition(section.getInt("amount", 0));
+                    return new XpPointsCondition(plugin, section.getInt("amount", 0));
 
                 case "ITEM":
                     Material mat = Material.matchMaterial(section.getString("material"));
-                    if (mat == null) return null;
-                    return new ItemCondition(mat, section.getInt("amount", 1));
+                    if (mat == null) {
+                        Map<String, String> replacements = new HashMap<>();
+                        replacements.put("material", section.getString("material", "UNKNOWN"));
+                        plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.invalid_material", replacements));
+                        return null;
+                    }
+                    return new ItemCondition(plugin, mat, section.getInt("amount", 1));
 
                 case "ITEM_CUSTOM_MODEL":
                     Material mat2 = Material.matchMaterial(section.getString("material"));
-                    if (mat2 == null) return null;
-                    return new ItemCondition(mat2, section.getInt("amount", 1),
+                    if (mat2 == null) {
+                        Map<String, String> replacements = new HashMap<>();
+                        replacements.put("material", section.getString("material", "UNKNOWN"));
+                        plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.invalid_material", replacements));
+                        return null;
+                    }
+                    return new ItemCondition(plugin, mat2, section.getInt("amount", 1),
                             section.getInt("custom_model_data"));
 
                 case "ITEMSADDER":
@@ -79,9 +113,10 @@ public class ConditionFactory {
                             section.getInt("amount", 1));
 
                 case "PERMISSION":
-                    return new PermissionCondition(section.getString("permission"));
+                    return new PermissionCondition(plugin, section.getString("permission"));
 
                 case "WORLDGUARD_REGION":
+                case "REGION":
                     return new WorldGuardRegionCondition(plugin,
                             section.getString("region"),
                             section.getBoolean("require_member", false));
@@ -93,12 +128,42 @@ public class ConditionFactory {
                             section.getString("value"),
                             section.getString("error_message"));
 
+                case "WEATHER":
+                    return new WeatherCondition(plugin, section.getString("weather", "clear"));
+
+                case "WORLD":
+                    List<String> worlds = section.getStringList("worlds");
+                    if (worlds.isEmpty()) {
+                        String singleWorld = section.getString("world");
+                        if (singleWorld != null) {
+                            worlds = new ArrayList<>();
+                            worlds.add(singleWorld);
+                        }
+                    }
+                    if (worlds.isEmpty()) {
+                        plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.world_condition_no_worlds"));
+                        return null;
+                    }
+                    return new WorldCondition(plugin, worlds, section.getBoolean("blacklist", false));
+
+                case "MODELED_NPC":
+                case "NPC":
+                case "NEAR_NPC":
+                    return new ModeledNPCCondition(plugin,
+                            section.getInt("npc_id"),
+                            section.getDouble("radius", 5.0));
+
                 default:
-                    plugin.getLogger().warning("Unknown condition type: " + type);
+                    Map<String, String> replacements = new HashMap<>();
+                    replacements.put("type", type);
+                    plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.unknown_condition_type", replacements));
                     return null;
             }
         } catch (Exception e) {
-            plugin.getLogger().warning("Failed to parse condition: " + e.getMessage());
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("error", e.getMessage());
+            plugin.getLogger().warning(plugin.getMessageManager().getMessage("errors.condition_parse_failed", replacements));
+            e.printStackTrace();
             return null;
         }
     }

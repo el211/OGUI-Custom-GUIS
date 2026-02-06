@@ -1,18 +1,23 @@
 package com.ogui.condition.impl;
 
+import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VaultMoneyCondition implements Condition {
+    private final OGUIPlugin plugin;
     private final double amount;
     private Economy economy;
 
-    public VaultMoneyCondition(double amount) {
+    public VaultMoneyCondition(OGUIPlugin plugin, double amount) {
+        this.plugin = plugin;
         this.amount = amount;
         setupEconomy();
     }
@@ -36,10 +41,16 @@ public class VaultMoneyCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        if (economy == null) return ColorUtil.color("&cEconomy system not available!");
+        if (economy == null) {
+            return plugin.getMessageManager().getMessage("conditions.vault_money.economy_unavailable", player);
+        }
+
         double balance = economy.getBalance(player);
-        return ColorUtil.color("&cInsufficient money! Need: &f$" + String.format("%.2f", amount) +
-                " &c(You have: &f$" + String.format("%.2f", balance) + "&c)");
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("amount", String.format("%.2f", amount));
+        replacements.put("balance", String.format("%.2f", balance));
+
+        return plugin.getMessageManager().getMessage("conditions.vault_money.insufficient", player, replacements);
     }
 
     @Override

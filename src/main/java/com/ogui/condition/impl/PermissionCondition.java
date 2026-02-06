@@ -1,14 +1,19 @@
 package com.ogui.condition.impl;
 
+import com.ogui.OGUIPlugin;
 import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionType;
-import com.ogui.util.ColorUtil;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PermissionCondition implements Condition {
+    private final OGUIPlugin plugin;
     private final String permission;
 
-    public PermissionCondition(String permission) {
+    public PermissionCondition(OGUIPlugin plugin, String permission) {
+        this.plugin = plugin;
         this.permission = permission;
     }
 
@@ -24,7 +29,10 @@ public class PermissionCondition implements Condition {
 
     @Override
     public String getErrorMessage(Player player) {
-        return ColorUtil.color("&cYou don't have permission: &f" + permission);
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("permission", permission);
+
+        return plugin.getMessageManager().getMessage("conditions.permission.missing", player, replacements);
     }
 
     @Override
