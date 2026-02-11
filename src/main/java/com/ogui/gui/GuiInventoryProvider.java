@@ -115,23 +115,89 @@ public class GuiInventoryProvider implements InventoryProvider {
 
 
     private void handleItemClick(Player player, GuiItem guiItem) {
+        // 1) CHECK ONLY (ne consomme rien)
         if (guiItem.hasConditions()) {
-            if (!checkAndConsumeConditions(player, guiItem)) {
-                return;
+            for (Condition condition : guiItem.getConditions()) {
+                if (!condition.check(player)) {
+                    player.sendMessage(condition.getErrorMessage(player));
+                    player.closeInventory();
+                    return;
+                }
             }
-        }
-        else {
-            if (!checkLegacyRequirements(player, guiItem)) {
+        } else {
+            // Legacy : on CHECK seulement ici, pas de withdraw
+            if (!checkLegacyRequirementsCheckOnly(player, guiItem)) {
                 return;
             }
         }
 
-        executeCommands(player, guiItem);
+        // 2) COMMANDS (bloque si fail)
+        if (!executeCommands(player, guiItem)) {
+            player.sendMessage(ColorUtil.color("&c✖ Une commande a échoué. Regarde la console."));
+            player.closeInventory();
+            return;
+        }
+
+        // 3) TAKE (paiement) uniquement si commandes OK
+        if (guiItem.hasConditions()) {
+            for (Condition condition : guiItem.getConditions()) {
+                if (!condition.take(player)) {
+                    player.sendMessage(ColorUtil.color("&c✖ Paiement impossible. Transaction annulée."));
+                    player.closeInventory();
+                    return;
+                }
+            }
+        } else {
+            // Legacy : withdraw maintenant seulement
+            if (!checkLegacyRequirementsConsumeOnly(player, guiItem)) {
+                return;
+            }
+        }
 
         if (guiItem.isCloseOnClick()) {
             player.closeInventory();
         }
     }
+    @SuppressWarnings("deprecation")
+    private boolean checkLegacyRequirementsCheckOnly(Player player, GuiItem guiItem) {
+        if (guiItem.hasPrice() && economy != null) {
+            double balance = economy.getBalance(player);
+            if (balance < guiItem.getPrice()) {
+                player.sendMessage(ColorUtil.color("&c✖ You don't have enough money!"));
+                player.sendMessage(ColorUtil.color("&7Need: &f$" + String.format("%.2f", guiItem.getPrice())));
+                player.sendMessage(ColorUtil.color("&7You have: &f$" + String.format("%.2f", balance)));
+                player.closeInventory();
+                return false;
+            }
+        }
+
+        if (guiItem.hasRequirement()) {
+            if (!player.hasPermission(guiItem.getRequirement())) {
+                player.sendMessage(ColorUtil.color("&c✖ You don't have permission to purchase this item!"));
+                player.sendMessage(ColorUtil.color("&7Required: &f" + guiItem.getRequirement()));
+                player.closeInventory();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @SuppressWarnings("deprecation")
+    private boolean checkLegacyRequirementsConsumeOnly(Player player, GuiItem guiItem) {
+        if (guiItem.hasPrice() && economy != null) {
+            var response = economy.withdrawPlayer(player, guiItem.getPrice());
+            if (!response.transactionSuccess()) {
+                player.sendMessage(ColorUtil.color("&c✖ Payment failed: " + response.errorMessage));
+                player.closeInventory();
+                return false;
+            }
+            player.sendMessage(ColorUtil.color("&a✔ Purchased for &f$" + String.format("%.2f", guiItem.getPrice())));
+        }
+        return true;
+    }
+
+
 
 
     private boolean checkAndConsumeConditions(Player player, GuiItem guiItem) {
@@ -186,13 +252,19 @@ public class GuiInventoryProvider implements InventoryProvider {
     }
 
 
-    private void executeCommands(Player player, GuiItem guiItem) {
+    private boolean executeCommands(Player player, GuiItem guiItem) {
         for (String command : guiItem.getCommands()) {
             String resolved = command.replace("{player}", player.getName());
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), resolved);
+            boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), resolved);
+            if (!ok) {
+                plugin.getLogger().warning("[OGUI] Command failed (returned false) for " + player.getName() + ": " + resolved);
+                return false;
+            }
         }
+        return true;
     }
+
 
     @Override
     public void update(Player player, InventoryContents contents) {

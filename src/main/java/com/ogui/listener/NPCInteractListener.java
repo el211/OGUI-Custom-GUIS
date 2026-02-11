@@ -22,14 +22,10 @@ public class NPCInteractListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onNPCInteract(NPCInteractEvent event) {
         Player player = event.getPlayer();
-        int npcId = event.getNpcId();
-
+        int npcId = event.getNPCData().getId();
         for (String guiId : plugin.getGuiRegistry().getGuiIds()) {
             GuiDefinition definition = plugin.getGuiRegistry().getGui(guiId);
-
-            if (definition == null) {
-                continue;
-            }
+            if (definition == null) continue;
 
             if (definition.hasNpcBinding() && definition.isNpcBound(npcId)) {
                 event.setCancelled(true);
@@ -40,7 +36,6 @@ public class NPCInteractListener implements Listener {
                     Map<String, String> replacements = new HashMap<>();
                     replacements.put("gui", guiId);
                     replacements.put("id", String.valueOf(npcId));
-
                     plugin.getMessageManager().send(player, "npc.gui_opened", replacements);
 
                     Map<String, String> consoleReplacements = new HashMap<>();
@@ -53,9 +48,9 @@ public class NPCInteractListener implements Listener {
                     plugin.getLogger().severe("Failed to open GUI '" + guiId + "' for NPC " + npcId + ": " + e.getMessage());
                     e.printStackTrace();
                 }
-
                 return;
             }
         }
     }
+
 }
