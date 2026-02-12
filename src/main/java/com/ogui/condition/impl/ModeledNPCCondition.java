@@ -38,7 +38,6 @@ public class ModeledNPCCondition implements Condition {
         try {
             ModeledNPCsAPI api = ModeledNPCsAPI.get();
 
-            // Check if NPC exists by checking if it's in the list of all NPCs
             if (!api.getAllNPCIds().contains(npcId)) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("id", String.valueOf(npcId));
@@ -56,12 +55,10 @@ public class ModeledNPCCondition implements Condition {
 
             Location playerLocation = player.getLocation();
 
-            // Check if in same world
             if (!npcLocation.getWorld().equals(playerLocation.getWorld())) {
                 return false;
             }
 
-            // Check distance
             double distance = playerLocation.distance(npcLocation);
             return distance <= radius;
 
@@ -75,7 +72,6 @@ public class ModeledNPCCondition implements Condition {
 
     @Override
     public boolean take(Player player) {
-        // This condition doesn't consume anything, it just checks proximity
         return check(player);
     }
 
@@ -88,14 +84,12 @@ public class ModeledNPCCondition implements Condition {
         try {
             ModeledNPCsAPI api = ModeledNPCsAPI.get();
 
-            // Check if NPC exists
             if (!api.getAllNPCIds().contains(npcId)) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("id", String.valueOf(npcId));
                 return plugin.getMessageManager().getMessage("conditions.modeled_npc.npc_not_found", player, replacements);
             }
 
-            // Get NPC display name
             String npcName = api.getNPCDisplayName(npcId);
             if (npcName == null) {
                 npcName = "NPC #" + npcId;
@@ -110,14 +104,12 @@ public class ModeledNPCCondition implements Condition {
 
             Location playerLocation = player.getLocation();
 
-            // Wrong world
             if (!npcLocation.getWorld().equals(playerLocation.getWorld())) {
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("world", npcLocation.getWorld().getName());
                 return plugin.getMessageManager().getMessage("conditions.modeled_npc.wrong_world", player, replacements);
             }
 
-            // Too far
             double distance = playerLocation.distance(npcLocation);
 
             Map<String, String> replacements = new HashMap<>();

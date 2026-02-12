@@ -37,7 +37,6 @@ public class XpPointsCondition implements Condition {
         Map<String, String> replacements = new HashMap<>();
         replacements.put("amount", String.valueOf(points));
         replacements.put("current", String.valueOf(player.getTotalExperience()));
-
         return plugin.getMessageManager().getMessage("conditions.xp_points.insufficient", player, replacements);
     }
 

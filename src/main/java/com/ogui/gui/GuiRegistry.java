@@ -5,12 +5,8 @@ import com.ogui.condition.Condition;
 import com.ogui.condition.ConditionFactory;
 import com.ogui.util.ColorUtil;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -19,7 +15,22 @@ public class GuiRegistry {
     private final OGUIPlugin plugin;
     private final Map<String, GuiDefinition> definitions = new LinkedHashMap<>();
     private final ConditionFactory conditionFactory;
+    // Add to GuiRegistry class
+    private final Map<Integer, String> npcToGuiMap = new HashMap<>();
 
+    // Call this when loading/registering GUIs with NPC bindings
+    public void cacheNpcBinding(int npcId, String guiId) {
+        npcToGuiMap.put(npcId, guiId);
+    }
+
+    public String getGuiByNpc(int npcId) {
+        return npcToGuiMap.get(npcId);
+    }
+
+    // Call this when unregistering GUIs
+    public void clearNpcBindings() {
+        npcToGuiMap.clear();
+    }
     public GuiRegistry(OGUIPlugin plugin) {
         this.plugin = plugin;
         this.conditionFactory = new ConditionFactory(plugin);

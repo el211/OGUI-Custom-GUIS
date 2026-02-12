@@ -230,7 +230,7 @@ npc:
   gui_opened: "<gradient:#00FF00:#00FFFF>✔ GUI Opened</gradient> &7→ &#FFD700'{gui}' &7via NPC &#00FFFF{id}"
   interaction_logged: "Player {player} opened GUI '{gui}' via NPC {id}"
   no_gui_bound: "&#FF6B6B✖ This NPC has no GUI configured."
-
+  error_opening_gui: "&cFailed to open GUI. Please contact an administrator."
 # ============================================
 # ITEM PROVIDER MESSAGES
 # ============================================
