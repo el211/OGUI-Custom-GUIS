@@ -7,25 +7,22 @@ import com.ogui.items.DefaultItemProvider;
 import com.ogui.items.ItemProvider;
 import com.ogui.listener.NPCInteractListener;
 import com.ogui.util.MessageManager;
+import fr.minuskube.inv.InventoryManager;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
-import fr.minuskube.inv.InventoryManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.PluginEnableEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class OGUIPlugin extends JavaPlugin implements Listener {
 
@@ -33,14 +30,15 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
     private GuiRegistry guiRegistry;
     private ItemProvider itemProvider;
     private MessageManager messageManager;
+
     private final List<String> registeredCommands = new ArrayList<>();
+    private boolean oreoHooked = false;
 
     @Override
     public void onEnable() {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
-
 
         int pluginId = 29355;
         Metrics metrics = new Metrics(this, pluginId);
@@ -49,8 +47,7 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
                 getGuiRegistry() != null ? getGuiRegistry().getGuiIds().size() : 0));
 
         metrics.addCustomChart(new SimplePie("hook_oreoessentials", () ->
-                (getItemProvider() instanceof com.ogui.items.DefaultItemProvider dip && dip.hasOreoEconomy())
-                        ? "yes" : "no"));
+                (getItemProvider() instanceof DefaultItemProvider dip && dip.hasOreoEconomy()) ? "yes" : "no"));
 
         saveResource("guis.yml", false);
         saveResource("lang.yml", false);
@@ -73,6 +70,7 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
         }
 
         registerGuiCommands();
+        getLogger().info("Registering GUI commands...");
         registerNPCListener();
 
         getLogger().info(messageManager.getMessage("loading.enabled"));
@@ -87,12 +85,20 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
         if (Bukkit.getPluginManager().getPlugin("ModeledNPCs") != null) {
             getLogger().info(messageManager.getMessage("loading.modelednpcs"));
         }
+
         Bukkit.getPluginManager().registerEvents(this, this);
 
-        Bukkit.getScheduler().runTask(this, () -> {
-            hookOreoEssentialsIfPresent();
-        });
+        Bukkit.getScheduler().runTask(this, this::hookOreoEssentialsIfPresent);
+    }
 
+    @Override
+    public void onDisable() {
+        inventoryManager = null;
+        guiRegistry = null;
+        itemProvider = null;
+        messageManager = null;
+        registeredCommands.clear();
+        getLogger().info("OGUI Enhanced disabled");
     }
 
     @EventHandler
@@ -101,8 +107,6 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
             hookOreoEssentialsIfPresent();
         }
     }
-
-    private boolean oreoHooked = false;
 
     private void hookOreoEssentialsIfPresent() {
         if (oreoHooked) return;
@@ -118,22 +122,10 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
             ((DefaultItemProvider) itemProvider).reloadHooks();
         }
 
-
         guiRegistry.reload();
         unregisterGuiCommands();
         registeredCommands.clear();
         registerGuiCommands();
-    }
-
-
-    @Override
-    public void onDisable() {
-        inventoryManager = null;
-        guiRegistry = null;
-        itemProvider = null;
-        messageManager = null;
-        registeredCommands.clear();
-        getLogger().info("OGUI Enhanced disabled");
     }
 
     public InventoryManager getInventoryManager() {
@@ -152,52 +144,24 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
         return messageManager;
     }
 
-    private void registerGuiCommands() {
-        try {
-            Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            CommandMap commandMap = (CommandMap) commandMapField.get(getServer());
+    public void reloadGuis() {
+        messageManager.reload();
 
-            for (String guiId : guiRegistry.getGuiIds()) {
-                GuiDefinition definition = guiRegistry.getGui(guiId);
-                if (definition == null || definition.getCommands().isEmpty()) {
-                    continue;
-                }
-
-                for (String cmdName : definition.getCommands()) {
-                    Command cmd = new Command(cmdName) {
-                        @Override
-                        public boolean execute(CommandSender sender, String label, String[] args) {
-                            if (!(sender instanceof Player)) {
-                                messageManager.send(sender, "general.player_only");
-                                return true;
-                            }
-
-                            Player player = (Player) sender;
-                            definition.createInventory(inventoryManager, OGUIPlugin.this).open(player);
-                            return true;
-                        }
-                    };
-
-                    cmd.setDescription("Opens the " + definition.getTitle() + " menu");
-                    cmd.setPermission("ogui.command." + guiId);
-
-                    commandMap.register("ogui", cmd);
-                    registeredCommands.add(cmdName);
-
-                    Map<String, String> replacements = new HashMap<>();
-                    replacements.put("command", cmdName);
-                    replacements.put("gui", guiId);
-                    getLogger().info(messageManager.getMessage("loading.command_registered", replacements));
-                }
-            }
-
-        } catch (Exception e) {
-            Map<String, String> replacements = new HashMap<>();
-            replacements.put("error", e.getMessage());
-            getLogger().severe(messageManager.getMessage("errors.command_register_failed", replacements));
-            e.printStackTrace();
+        if (itemProvider instanceof DefaultItemProvider) {
+            ((DefaultItemProvider) itemProvider).reloadHooks();
         }
+
+        unregisterGuiCommands();
+        registeredCommands.clear();
+
+        guiRegistry.reload();
+
+        registerGuiCommands();
+
+        Map<String, String> replacements = new HashMap<>();
+        replacements.put("count", String.valueOf(guiRegistry.getGuiIds().size()));
+        getLogger().info(messageManager.getMessage("general.reload.success"));
+        getLogger().info(messageManager.getMessage("general.reload.gui_count", replacements));
     }
 
     private void registerNPCListener() {
@@ -228,25 +192,93 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    private void registerGuiCommands() {
+        try {
+            CommandMap commandMap = getCommandMap();
+            Map<String, Command> knownCommands = getKnownCommands(commandMap);
+
+            for (String guiId : guiRegistry.getGuiIds()) {
+                GuiDefinition definition = guiRegistry.getGui(guiId);
+                if (definition == null || definition.getCommands().isEmpty()) continue;
+
+                List<String> normalized = normalizeCommands(definition.getCommands());
+                if (normalized.isEmpty()) continue;
+
+                String primary = normalized.get(0);
+                List<String> aliases = normalized.size() > 1
+                        ? new ArrayList<>(normalized.subList(1, normalized.size()))
+                        : Collections.emptyList();
+
+                Command cmd = new Command(primary) {
+                    @Override
+                    public boolean execute(CommandSender sender, String label, String[] args) {
+                        if (!(sender instanceof Player)) {
+                            messageManager.send(sender, "general.player_only");
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+
+                        if (!player.hasPermission("ogui.command." + guiId)) {
+                            messageManager.send(player, "general.no_permission");
+                            return true;
+                        }
+
+                        definition.createInventory(inventoryManager, OGUIPlugin.this).open(player);
+                        return true;
+                    }
+                };
+
+                cmd.setAliases(new ArrayList<>(aliases));
+                cmd.setDescription("Opens the " + definition.getTitle() + " menu");
+                cmd.setPermission("ogui.command." + guiId);
+
+                // Remove any existing entries for these names before registering
+                forceUnregisterNames(knownCommands, primary, aliases);
+
+                // Mark the command as registered without going through register()'s
+                // conflict-detection logic, which can silently drop plain-name entries
+                cmd.register(commandMap);
+
+                // Manually insert all names into knownCommands so Bukkit can route them
+                knownCommands.put(primary.toLowerCase(Locale.ENGLISH), cmd);
+                knownCommands.put(("ogui:" + primary).toLowerCase(Locale.ENGLISH), cmd);
+                registeredCommands.add(primary);
+
+                for (String a : aliases) {
+                    knownCommands.put(a.toLowerCase(Locale.ENGLISH), cmd);
+                    knownCommands.put(("ogui:" + a).toLowerCase(Locale.ENGLISH), cmd);
+                    registeredCommands.add(a);
+                }
+
+                Map<String, String> replacements = new HashMap<>();
+                replacements.put("command", primary + (aliases.isEmpty() ? "" : " (aliases: " + String.join(", ", aliases) + ")"));
+                replacements.put("gui", guiId);
+                getLogger().info(messageManager.getMessage("loading.command_registered", replacements));
+            }
+
+        } catch (Exception e) {
+            Map<String, String> replacements = new HashMap<>();
+            replacements.put("error", e.getMessage());
+            getLogger().severe(messageManager.getMessage("errors.command_register_failed", replacements));
+            e.printStackTrace();
+        }
+    }
+
     private void unregisterGuiCommands() {
         try {
-            Field commandMapField = getServer().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-            CommandMap commandMap = (CommandMap) commandMapField.get(getServer());
-
-            Field knownCommandsField = commandMap.getClass().getDeclaredField("knownCommands");
-            knownCommandsField.setAccessible(true);
-
-            @SuppressWarnings("unchecked")
-            Map<String, Command> knownCommands = (Map<String, Command>) knownCommandsField.get(commandMap);
+            CommandMap commandMap = getCommandMap();
+            Map<String, Command> knownCommands = getKnownCommands(commandMap);
 
             for (String cmdName : registeredCommands) {
-                knownCommands.remove(cmdName.toLowerCase());
-                knownCommands.remove(("ogui:" + cmdName).toLowerCase());
+                String key = cmdName.toLowerCase(Locale.ENGLISH);
+                knownCommands.remove(key);
+                knownCommands.remove(("ogui:" + key).toLowerCase(Locale.ENGLISH));
 
                 knownCommands.entrySet().removeIf(e ->
                         e.getKey() != null &&
-                                (e.getKey().equalsIgnoreCase(cmdName) || e.getKey().equalsIgnoreCase("ogui:" + cmdName)));
+                                (e.getKey().equalsIgnoreCase(cmdName) ||
+                                        e.getKey().equalsIgnoreCase("ogui:" + cmdName)));
             }
 
         } catch (Exception e) {
@@ -255,25 +287,70 @@ public class OGUIPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    public void reloadGuis() {
-        messageManager.reload();
-
-        if (itemProvider instanceof DefaultItemProvider) {
-            ((DefaultItemProvider) itemProvider).reloadHooks();
+    private CommandMap getCommandMap() throws Exception {
+        Class<?> clazz = getServer().getClass();
+        while (clazz != null) {
+            try {
+                Field commandMapField = clazz.getDeclaredField("commandMap");
+                commandMapField.setAccessible(true);
+                return (CommandMap) commandMapField.get(getServer());
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
         }
-
-        unregisterGuiCommands();
-        registeredCommands.clear();
-
-        guiRegistry.reload();
-
-        registerGuiCommands();
-
-        Map<String, String> replacements = new HashMap<>();
-        replacements.put("count", String.valueOf(guiRegistry.getGuiIds().size()));
-        getLogger().info(messageManager.getMessage("general.reload.success"));
-        getLogger().info(messageManager.getMessage("general.reload.gui_count", replacements));
+        throw new Exception("Could not find commandMap field in server class hierarchy");
     }
 
+    @SuppressWarnings("unchecked")
+    private Map<String, Command> getKnownCommands(CommandMap commandMap) throws Exception {
+        Class<?> clazz = commandMap.getClass();
+        while (clazz != null) {
+            try {
+                Field knownCommandsField = clazz.getDeclaredField("knownCommands");
+                knownCommandsField.setAccessible(true);
+                return (Map<String, Command>) knownCommandsField.get(commandMap);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new Exception("Could not find knownCommands field in CommandMap hierarchy");
+    }
 
+    private List<String> normalizeCommands(List<String> raw) {
+        List<String> out = new ArrayList<>();
+        for (String s : raw) {
+            if (s == null) continue;
+            String v = s.trim();
+            if (v.isEmpty()) continue;
+            if (v.startsWith("/")) v = v.substring(1);
+            v = v.toLowerCase(Locale.ENGLISH);
+            v = v.replaceAll("[^a-z0-9_:\\-]", "");
+            if (!v.isEmpty()) out.add(v);
+        }
+        LinkedHashSet<String> set = new LinkedHashSet<>(out);
+        return new ArrayList<>(set);
+    }
+
+    private void forceUnregisterNames(Map<String, Command> knownCommands, String primary, List<String> aliases) {
+        List<String> all = new ArrayList<>();
+        all.add(primary);
+        all.addAll(aliases);
+
+        for (String name : all) {
+            String key = name.toLowerCase(Locale.ENGLISH);
+
+            Command existing = knownCommands.get(key);
+            if (existing != null) {
+                getLogger().warning("Command '/" + name + "' was already registered by another plugin. Overriding it for OGUI GUI command.");
+            }
+
+            knownCommands.remove(key);
+            knownCommands.remove(("ogui:" + key).toLowerCase(Locale.ENGLISH));
+
+            knownCommands.entrySet().removeIf(e ->
+                    e.getKey() != null &&
+                            (e.getKey().equalsIgnoreCase(name) ||
+                                    e.getKey().equalsIgnoreCase("ogui:" + name)));
+        }
+    }
 }

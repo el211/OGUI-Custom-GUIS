@@ -145,6 +145,18 @@ public class ConditionFactory {
                         return null;
                     }
                     return new WorldCondition(plugin, worlds, section.getBoolean("blacklist", false));
+                case "LUCKPERMS_GROUP":
+                case "LUCKPERMS_RANK":
+                case "LUCKPERMS":
+                case "GROUP":
+                case "RANK":
+                    return new LuckPermsGroupCondition(
+                            plugin,
+                            section.getString("group"),
+                            section.getBoolean("include_inherited", true),
+                            section.getBoolean("negate", false),
+                            section.getString("error_message")
+                    );
 
                 case "MODELED_NPC":
                 case "NPC":

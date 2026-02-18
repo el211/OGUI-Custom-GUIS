@@ -16,5 +16,6 @@ public enum ConditionType {
     PLACEHOLDER,
     WEATHER,
     WORLD,
-    MODELED_NPC
+    MODELED_NPC,
+    LUCKPERMS_GROUP
 }

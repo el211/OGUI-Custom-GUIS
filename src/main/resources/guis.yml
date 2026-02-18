@@ -10,6 +10,41 @@
 # ============================================
 
 guis:
+  luckperms_rank_shop:
+    title: "&6&l👑 LuckPerms Rank Shop"
+    rows: 3
+    commands:
+      - "lpshop"
+      - "rankonlyshop"
+    items:
+      "11":
+        material: NETHER_STAR
+        name: "&d&lVIP+ Only Item"
+        lore:
+          - "&7You can only buy this if you have the"
+          - "&6VIP+ &7LuckPerms group."
+          - ""
+          - "&ePrice: &a$2500"
+          - "&7Click to purchase"
+        commands:
+          - "give {player} nether_star 1"
+          - "tellraw {player} {\"text\":\"You purchased a VIP+ item!\",\"color\":\"gold\"}"
+        close: true
+        conditions:
+          - type: LUCKPERMS_GROUP
+            group: vipplus
+            include_inherited: true
+            error_message: "&c❌ You must have the &e{group}&c rank to buy this!"
+          - type: VAULT_MONEY
+            amount: 2500
+
+      "22":
+        material: BARRIER
+        name: "&c&lClose"
+        lore:
+          - "&7Click to close"
+        close: true
+
   # ============================================
   # EXAMPLE 1: VAULT MONEY CONDITIONS
   # ============================================

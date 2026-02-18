@@ -255,12 +255,7 @@ public class GuiInventoryProvider implements InventoryProvider {
     private boolean executeCommands(Player player, GuiItem guiItem) {
         for (String command : guiItem.getCommands()) {
             String resolved = command.replace("{player}", player.getName());
-
-            boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), resolved);
-            if (!ok) {
-                plugin.getLogger().warning("[OGUI] Command failed (returned false) for " + player.getName() + ": " + resolved);
-                return false;
-            }
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), resolved);
         }
         return true;
     }
