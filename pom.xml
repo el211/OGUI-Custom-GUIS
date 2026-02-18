@@ -6,7 +6,7 @@
 
     <groupId>fr.oreo</groupId>
     <artifactId>OGUIPlugin</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OGUIPlugin</name>
@@ -195,7 +195,7 @@
             <artifactId>oreoessentials</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/libs/OreoEssentials-3.3-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/libs/OreoEssentials-3.6-SNAPSHOT.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
